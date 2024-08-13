@@ -10,6 +10,7 @@ import nexpert from '../images/nexpert.png';
 import smartfin from '../images/smartfin.png'
 import bitebuddy from '../images/bitebuddy.png'
 import ephemeral from '../images/ephemeral.png'
+import cs182_project from '../images/182-project.jpg'
 
 function ProjectPage() {
     const projects = [
@@ -30,6 +31,15 @@ function ProjectPage() {
             imageUrl: ephemeral,
             url: "https://devpost.com/software/invisible-me",
             github: "https://github.com/JasonDing9/ephemeral"
+        },
+        {
+            id: "3",
+            name: "Stylized Text Generation",
+            description: "Fine-tuning a large language model for style-specific text generation using a novel custom loss function and parameter-efficient fine-tuning methods.",
+            awards: "Research paper for EECS 182/282A: Deep Neural Networks at UC Berkeley",
+            imageUrl: cs182_project,
+            url: "https://docs.google.com/document/d/1PoNFB9MClst81M_IbMub1_TmPynF3B4V6rozobU8ocY/edit?usp=sharing",
+            github: "https://github.com/pgasawa/cs182-project"
         },
         {
             id: "3",
