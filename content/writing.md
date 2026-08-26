@@ -1,8 +1,4 @@
----
-layout: default
-title: Writing
-permalink: /writing/
----
+# Writing
 
 <span class="newthought">This is a placeholder</span> for the writing page. Replace it with links to essays, notes, or posts.
 

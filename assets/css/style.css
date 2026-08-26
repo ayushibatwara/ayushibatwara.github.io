@@ -112,6 +112,10 @@ hr {
   margin: 3rem 0;
 }
 
+code {
+  font-size: 0.78em;
+}
+
 ul, ol {
   padding-left: 2.5rem;
 }

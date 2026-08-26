@@ -1,28 +1,26 @@
 # ayushibatwara.github.io
 
-Personal website, rendered by GitHub Pages with Jekyll. Edit the markdown, push to `main`, and the site rebuilds automatically — no build step.
+Personal website. Plain HTML/CSS; page content is written in markdown and rendered in the browser by [marked](https://marked.js.org/) (vendored at `assets/js/marked.min.js` — no build step, no dependencies).
 
-## Pages
+## Editing content
 
-- `index.md` — home
-- `reading.md` — /reading/
-- `writing.md` — /writing/
+All content lives in `content/*.md` — open these in MarkText (or any editor):
 
-To add a page: create `foo.md` with the same front matter (`layout: default`, `title:`, `permalink: /foo/`) and add a link to it in `_layouts/default.html`.
+- `content/home.md` → /
+- `content/reading.md` → /reading/
+- `content/writing.md` → /writing/
+
+Push to publish. To add a page, copy `reading/index.html` to `newpage/index.html`, point its `data-md` at a new markdown file, and add the nav link in each HTML file.
 
 ## Sidenotes
 
-Numbered sidenote (the `id` just needs to be unique within the page):
+Write `^[note text]` immediately after the text it annotates:
 
 ```
-Some text{% raw %}{% include sidenote.html id="1" note="The note text." %}{% endraw %} continues here.
+Some claim worth qualifying.^[The qualification, in the margin.] The paragraph continues.
 ```
 
-Unnumbered margin note:
-
-```
-{% raw %}{% include marginnote.html id="a" note="The note text." %}{% endraw %}
-```
+Notes are numbered automatically and support inline markdown (links, italics). On small screens they collapse behind a tappable number.
 
 Small-caps lead-in for a paragraph:
 
@@ -32,13 +30,12 @@ Small-caps lead-in for a paragraph:
 
 ## Styling
 
-Everything lives in `assets/css/style.css`. The accent color is `#003262` (the `--accent` variable at the top).
+`assets/css/style.css`. The accent color is `#003262` (the `--accent` variable at the top).
 
-## Local preview (optional)
+## Local preview
 
 ```
-gem install bundler && bundle install
-bundle exec jekyll serve
+python3 -m http.server
 ```
 
-Then open http://localhost:4000.
+Then open http://localhost:8000. (A server is needed because the pages fetch their markdown; opening the HTML files directly won't load content.)
