@@ -9,6 +9,8 @@ Personal website. Plain HTML/CSS; page content is written in markdown and render
 ./publish.sh "what changed"        # render math + commit + push + deploy
 ```
 
+While `./preview.sh` is running, **http://localhost:8000/editor.html** is a browser editor: pick any page or draft, type markdown on the left, see the fully rendered page (sidenotes, math) on the right. It autosaves to disk about a second after you stop typing (Cmd+S to save immediately), and "new draft" creates a file in `drafts/`. Editing in MarkText or any other editor still works the same as before.
+
 ## Pages
 
 - `content/home.md` → /

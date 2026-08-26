@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Editor · Ayushi Batwara</title>
+  <link rel="icon" href="/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <style>
+    body {
+      max-width: none;
+      padding: 0;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .editor-bar {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.6rem 1.2rem;
+      border-bottom: 1px solid #e5e5e5;
+      font-size: 1rem;
+    }
+    .editor-bar select {
+      font: inherit;
+      font-family: inherit;
+      max-width: 20rem;
+    }
+    .editor-bar button {
+      font: inherit;
+      background: none;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      padding: 0.15rem 0.7rem;
+      cursor: pointer;
+    }
+    .editor-bar button:hover { border-color: var(--accent); color: var(--accent); }
+    .editor-bar .status { color: #9a9a9a; font-style: italic; min-width: 5rem; }
+    .editor-bar .spacer { flex: 1; }
+    .editor-bar a { font-size: 0.95rem; }
+    .editor-split {
+      flex: 1;
+      display: flex;
+      min-height: 0;
+    }
+    .editor-split textarea {
+      width: 44%;
+      resize: none;
+      border: none;
+      border-right: 1px solid #e5e5e5;
+      outline: none;
+      padding: 2rem 1.5rem;
+      font: 14px/1.6 ui-monospace, "SF Mono", Menlo, monospace;
+      color: #222;
+    }
+    .pane-preview {
+      flex: 1;
+      overflow-y: auto;
+      min-width: 0;
+    }
+    .pane-preview article {
+      padding: 2rem 2.5rem 6rem;
+      position: relative;
+    }
+    #editor-offline {
+      padding: 4rem 3rem;
+      font-size: 1.4rem;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="editor-offline">
+    The editor only works locally — run <code>./preview.sh</code> in the repo and open
+    <code>http://localhost:8000/editor.html</code>.
+  </div>
+  <div class="editor-bar" id="editor-bar">
+    <select id="file-select"></select>
+    <button id="new-draft">new draft</button>
+    <span class="status" id="save-status">saved</span>
+    <span class="spacer"></span>
+    <a id="page-link" href="/" target="_blank">open page ↗</a>
+  </div>
+  <div class="editor-split" id="editor-split">
+    <textarea id="editor-text" spellcheck="true" placeholder="Write markdown here…"></textarea>
+    <div class="pane-preview"><article id="preview"></article></div>
+  </div>
+  <script src="/assets/js/marked.min.js"></script>
+  <script src="/assets/js/math-common.js"></script>
+  <script src="/assets/js/site.js"></script>
+  <script src="/assets/js/editor.js"></script>
+</body>
+</html>
