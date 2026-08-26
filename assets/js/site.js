@@ -34,6 +34,27 @@ function convertSidenotes(md) {
   }
 })();
 
+// Place each sidenote in the right margin, level with its number, nudging
+// notes down as needed so they never overlap.
+function layoutSidenotes(article) {
+  const notes = article.querySelectorAll(".sidenote, .marginnote");
+  if (window.matchMedia("(max-width: 760px)").matches) {
+    notes.forEach((n) => (n.style.top = ""));
+    article.style.minHeight = "";
+    return;
+  }
+  const articleTop = article.getBoundingClientRect().top;
+  let lastBottom = -Infinity;
+  notes.forEach((note) => {
+    const anchor = note.previousElementSibling?.previousElementSibling || note.parentElement;
+    let top = anchor.getBoundingClientRect().top - articleTop;
+    if (top < lastBottom + 10) top = lastBottom + 10;
+    note.style.top = `${top}px`;
+    lastBottom = top + note.offsetHeight;
+  });
+  if (lastBottom > 0) article.style.minHeight = `${lastBottom}px`;
+}
+
 (async function () {
   const article = document.querySelector("article[data-md]");
   if (!article) return;
@@ -42,6 +63,10 @@ function convertSidenotes(md) {
     if (!res.ok) throw new Error(`${res.status} fetching ${article.dataset.md}`);
     const md = await res.text();
     article.innerHTML = marked.parse(convertSidenotes(md));
+    layoutSidenotes(article);
+    // re-layout once webfonts land and whenever the window resizes
+    document.fonts.ready.then(() => layoutSidenotes(article));
+    window.addEventListener("resize", () => layoutSidenotes(article));
   } catch (err) {
     article.innerHTML =
       "<p>Couldn't load this page's content. If you opened the file directly, " +
