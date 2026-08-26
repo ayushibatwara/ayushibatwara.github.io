@@ -58,11 +58,18 @@ function layoutSidenotes(article) {
 (async function () {
   const article = document.querySelector("article[data-md]");
   if (!article) return;
+  let src = article.dataset.md;
+  if (!src) {
+    // draft.html viewer: /draft.html?f=drafts/my-piece.md
+    const f = new URLSearchParams(location.search).get("f") || "";
+    if (/^\/?(drafts|content)\/[\w./-]+\.md$/.test(f)) src = "/" + f.replace(/^\//, "");
+  }
+  if (!src) return;
   try {
-    const res = await fetch(article.dataset.md);
-    if (!res.ok) throw new Error(`${res.status} fetching ${article.dataset.md}`);
+    const res = await fetch(src);
+    if (!res.ok) throw new Error(`${res.status} fetching ${src}`);
     const md = await res.text();
-    article.innerHTML = marked.parse(convertSidenotes(md));
+    article.innerHTML = marked.parse(convertSidenotes(TypstMath.transformMath(md).text));
     layoutSidenotes(article);
     // re-layout once webfonts land and whenever the window resizes
     document.fonts.ready.then(() => layoutSidenotes(article));

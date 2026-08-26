@@ -1,16 +1,43 @@
 # ayushibatwara.github.io
 
-Personal website. Plain HTML/CSS; page content is written in markdown and rendered in the browser by [marked](https://marked.js.org/) (vendored at `assets/js/marked.min.js` — no build step, no dependencies).
+Personal website. Plain HTML/CSS; page content is written in markdown and rendered in the browser by [marked](https://marked.js.org/) (vendored, no build step). Typst math is pre-rendered to SVGs by a small script.
 
-## Editing content
+## Daily workflow
 
-All content lives in `content/*.md` — open these in MarkText (or any editor):
+```
+./preview.sh                       # local preview at localhost:8000, math re-renders as you save
+./publish.sh "what changed"        # render math + commit + push + deploy
+```
+
+## Pages
 
 - `content/home.md` → /
 - `content/reading.md` → /reading/
-- `content/writing.md` → /writing/
+- `content/writing.md` → /writing/ (the index, with Technical and Essays sections)
+- `content/writing/<slug>.md` → /writing/`<slug>`/ (individual pieces)
 
-Push to publish. To add a page, copy `reading/index.html` to `newpage/index.html`, point its `data-md` at a new markdown file, and add the nav link in each HTML file.
+## Drafts → published pieces
+
+1. Write in `drafts/my-piece.md` (gitignored — never published).
+2. Preview it at `http://localhost:8000/draft.html?f=drafts/my-piece.md` while running `./preview.sh`.
+3. When it's ready:
+
+```
+mv drafts/my-piece.md content/writing/my-piece.md
+tools/new-piece.sh my-piece "My Piece Title"     # creates the /writing/my-piece/ page
+# add a link under Technical or Essays in content/writing.md
+./publish.sh "publish: My Piece Title"
+```
+
+## Typst math
+
+Write Typst notation directly in the markdown:
+
+- Inline: `$x^2 + y^2 = z^2$` (no space just inside the `$`)
+- Display: `$$ integral_0^infinity e^(-x^2) dif x = sqrt(pi)/2 $$`
+- Literal dollar sign: `\$`
+
+`tools/render-math.cjs` (run automatically by preview/publish) compiles each snippet with the Typst CLI (`brew install typst`) into an SVG in `assets/math/`, keyed by content hash; the page swaps them in at render time. Unused SVGs are pruned automatically.
 
 ## Sidenotes
 
@@ -20,22 +47,12 @@ Write `^[note text]` immediately after the text it annotates:
 Some claim worth qualifying.^[The qualification, in the margin.] The paragraph continues.
 ```
 
-Notes are numbered automatically and support inline markdown (links, italics). On small screens they collapse behind a tappable number.
-
-Small-caps lead-in for a paragraph:
-
-```
-<span class="newthought">These notes</span> form a concise...
-```
+Numbered automatically; inline markdown and math work inside. On small screens they collapse behind a tappable number. Small-caps lead-in: `<span class="newthought">Like this</span>`.
 
 ## Styling
 
 `assets/css/style.css`. The accent color is `#003262` (the `--accent` variable at the top).
 
-## Local preview
+## Deploy plumbing
 
-```
-python3 -m http.server
-```
-
-Then open http://localhost:8000. (A server is needed because the pages fetch their markdown; opening the HTML files directly won't load content.)
+GitHub Pages currently deploys from the `gh-pages` branch; `publish.sh` mirrors `main` onto it after each push. Once repo Settings → Pages is switched to deploy from `main`, that block in `publish.sh` can be deleted along with the `gh-pages` branch.
