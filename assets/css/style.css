@@ -132,17 +132,15 @@ li {
 
 /* ---- Sidenotes ---- */
 
+/* Positioned in the right margin by site.js, anchored to their number —
+   this works no matter how deeply the note is nested (lists, blockquotes). */
 .sidenote,
 .marginnote {
-  float: right;
-  clear: right;
-  margin-right: -55%;
-  width: 48%;
-  margin-top: 0.3rem;
-  margin-bottom: 1rem;
+  position: absolute;
+  left: 64%;
+  width: 34%;
   font-size: 1.05rem;
   line-height: 1.5;
-  position: relative;
 }
 
 .sidenote-number {
@@ -227,7 +225,7 @@ label.margin-toggle {
   .margin-toggle:checked + .sidenote,
   .margin-toggle:checked + .marginnote {
     display: block;
-    float: none;
+    position: static;
     width: 95%;
     margin: 1rem 2.5%;
   }
