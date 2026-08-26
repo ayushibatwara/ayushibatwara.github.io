@@ -1,0 +1,210 @@
+/* Tufte-style layout with sidenotes, adapted from tufte-css.
+   Accent: #003262 on a white ground. */
+
+:root {
+  --accent: #003262;
+  --ink: #151515;
+  --paper: #ffffff;
+}
+
+html {
+  font-size: 15px;
+}
+
+body {
+  font-family: "EB Garamond", Palatino, "Palatino Linotype", Georgia, serif;
+  background-color: var(--paper);
+  color: var(--ink);
+  font-size: 1.4rem;
+  line-height: 1.55;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 2.5rem 8% 6rem;
+  counter-reset: sidenote-counter;
+}
+
+/* ---- Navigation ---- */
+
+.site-nav {
+  margin-bottom: 4.5rem;
+}
+
+.site-nav a {
+  color: var(--accent);
+  font-size: 1.05rem;
+  font-variant: small-caps;
+  letter-spacing: 0.18em;
+  text-transform: lowercase;
+  text-decoration: none;
+  margin-right: 2.2rem;
+}
+
+.site-nav a:hover,
+.site-nav a.active {
+  border-bottom: 1px solid var(--accent);
+}
+
+/* ---- Headings ---- */
+
+h1 {
+  font-weight: 400;
+  font-size: 3.1rem;
+  line-height: 1.1;
+  margin: 0 0 2.8rem 0;
+}
+
+h2 {
+  font-weight: 400;
+  font-style: italic;
+  font-size: 2.1rem;
+  margin: 2.6rem 0 1.4rem 0;
+}
+
+h3 {
+  font-weight: 400;
+  font-style: italic;
+  font-size: 1.7rem;
+  margin: 2.2rem 0 1.2rem 0;
+}
+
+/* ---- Main column: 60% wide, sidenotes live in the right margin ---- */
+
+article > p,
+article > ol,
+article > ul,
+article > h1,
+article > h2,
+article > h3,
+article > blockquote,
+article > hr {
+  width: 60%;
+}
+
+article {
+  position: relative;
+}
+
+p {
+  margin: 1.4rem 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+blockquote {
+  font-style: italic;
+  margin-left: 1.5rem;
+  padding-left: 1rem;
+  border-left: 2px solid #ddd;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 3rem 0;
+}
+
+ul, ol {
+  padding-left: 2.5rem;
+}
+
+li {
+  margin: 0.5rem 0;
+}
+
+/* Small-caps lead-in, e.g. <span class="newthought">These notes</span> */
+.newthought {
+  font-variant: small-caps;
+  letter-spacing: 0.03em;
+}
+
+/* ---- Sidenotes ---- */
+
+.sidenote,
+.marginnote {
+  float: right;
+  clear: right;
+  margin-right: -55%;
+  width: 48%;
+  margin-top: 0.3rem;
+  margin-bottom: 1rem;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  position: relative;
+}
+
+.sidenote-number {
+  counter-increment: sidenote-counter;
+}
+
+.sidenote-number:after {
+  content: counter(sidenote-counter);
+  color: var(--accent);
+  font-size: 0.85rem;
+  position: relative;
+  top: -0.5rem;
+  left: 0.05rem;
+}
+
+.sidenote:before {
+  content: counter(sidenote-counter) ". ";
+  color: var(--accent);
+  font-size: 0.95rem;
+}
+
+input.margin-toggle {
+  display: none;
+}
+
+label.margin-toggle:not(.sidenote-number) {
+  display: none;
+}
+
+label.margin-toggle {
+  cursor: pointer;
+}
+
+/* ---- Small screens: full-width text, tappable sidenotes ---- */
+
+@media (max-width: 760px) {
+  body {
+    padding: 2rem 6% 4rem;
+  }
+
+  article > p,
+  article > ol,
+  article > ul,
+  article > h1,
+  article > h2,
+  article > h3,
+  article > blockquote,
+  article > hr {
+    width: 100%;
+  }
+
+  label.margin-toggle:not(.sidenote-number) {
+    display: inline;
+    color: var(--accent);
+  }
+
+  .sidenote,
+  .marginnote {
+    display: none;
+  }
+
+  .margin-toggle:checked + .sidenote,
+  .margin-toggle:checked + .marginnote {
+    display: block;
+    float: none;
+    width: 95%;
+    margin: 1rem 2.5%;
+  }
+}
