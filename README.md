@@ -35,7 +35,7 @@ tools/new-piece.sh my-piece "My Piece Title"     # creates the /writing/my-piece
 
 Write Typst notation directly in the markdown:
 
-- Inline: `$x^2 + y^2 = z^2$` (no space just inside the `$`)
+- Inline: `$x^2 + y^2 = z^2$` or space-padded `$ x^2 $` (spaces either on both sides or neither — that's how `$5 and $10` stays plain text)
 - Display: `$$ integral_0^infinity e^(-x^2) dif x = sqrt(pi)/2 $$`
 - Literal dollar sign: `\$`
 
