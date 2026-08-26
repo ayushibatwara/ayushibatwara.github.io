@@ -179,7 +179,14 @@ label.margin-toggle {
 /* ---- Footer ---- */
 
 #last-updated {
-  margin-top: 7rem;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0.6rem 8% 1rem;
+  background: var(--paper);
   font-size: 1rem;
   font-style: italic;
   color: #9a9a9a;
@@ -190,6 +197,10 @@ label.margin-toggle {
 @media (max-width: 760px) {
   body {
     padding: 2rem 6% 4rem;
+  }
+
+  #last-updated {
+    padding: 0.6rem 6% 1rem;
   }
 
   article > p,
