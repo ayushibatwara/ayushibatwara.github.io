@@ -44,7 +44,8 @@
       });
       const out = await res.json();
       if (!out.ok) throw new Error(out.error || "save failed");
-      setStatus(out.mathError ? "saved (math error — see terminal)" : "saved");
+      if (out.mathError) console.error(out.mathError);
+      setStatus(out.mathError ? "saved (math error — see console)" : "saved");
       render(); // math SVGs may have just been created
     } catch (err) {
       dirty = true;

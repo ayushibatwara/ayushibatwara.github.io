@@ -34,13 +34,16 @@ function typstSource({ mode, content }) {
 
 const snippets = new Map();
 for (const file of [...mdFiles("content"), ...mdFiles("drafts")]) {
+  const inContent = !path.relative(root, file).startsWith("drafts");
   for (const s of transformMath(fs.readFileSync(file, "utf8")).snippets) {
-    snippets.set(s.hash, s);
+    const existing = snippets.get(s.hash);
+    snippets.set(s.hash, { ...s, inContent: (existing && existing.inContent) || inContent });
   }
 }
 
 let rendered = 0;
 let failed = 0;
+let contentFailed = 0;
 const tmp = path.join(os.tmpdir(), `typst-math-${process.pid}.typ`);
 for (const [hash, snippet] of snippets) {
   const out = path.join(mathDir, `m-${hash}.svg`);
@@ -51,7 +54,10 @@ for (const [hash, snippet] of snippets) {
     rendered++;
   } catch (err) {
     failed++;
-    console.error(`✗ typst failed on: ${snippet.mode} $${snippet.content}$`);
+    if (snippet.inContent) contentFailed++;
+    console.error(
+      `✗ typst failed on ${snippet.inContent ? "" : "(draft) "}${snippet.mode}: $${snippet.content}$`
+    );
     console.error(String(err.stderr || err.message).trim());
   }
 }
@@ -72,4 +78,5 @@ if (!quiet || rendered || failed || pruned) {
       (failed ? `, ${failed} FAILED` : "")
   );
 }
-process.exitCode = failed ? 1 : 0;
+// Only failures in published content block a publish; draft errors just warn.
+process.exitCode = contentFailed ? 1 : 0;
