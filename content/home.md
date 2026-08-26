@@ -1,7 +1,8 @@
 # Ayushi Batwara
 
-<span class="newthought">This is a placeholder</span> for the home page.^[This is a sidenote. It sits in the right margin next to the text it annotates, and collapses into a tappable note on small screens.] Replace this paragraph with a short introduction — who you are, what you're working on, and where to find you.
+I'm working on something new! Before this, I spent two years at Databricks, building the infrastructure for AI governance and observability.
 
-Everything here is plain markdown. Edit `content/home.md` (MarkText works great), push, and the site updates.
+I received my B.S. in EECS & B.S. in Business Administration from the [M.E.T. Program at UC Berkeley](https://met.berkeley.edu/). 
 
-Here is a second paragraph with another sidenote,^[Sidenotes are numbered automatically — just write `^[your note]` right after the text it belongs to.] so you can see how the numbering works.
+<!-- <span class="newthought">This is a placeholder</span> -->
+<!-- sidenote^[note itself] -->
