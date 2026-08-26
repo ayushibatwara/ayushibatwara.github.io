@@ -51,12 +51,13 @@
     const out = parts.map((part, i) => {
       if (i % 2 === 1) return part; // code — leave alone
       let t = part.replace(/\$\$([\s\S]+?)\$\$/g, (_, m) => `\n\n${add("display", m)}\n\n`);
-      // inline math: $x$ or space-padded $ x $ (spaces required on BOTH
-      // sides inside, so "$5 and $10" is never mistaken for math).
+      // inline math: $x$, $ x $, or $ x$ all work. The one shape rejected
+      // is a space before the closing $ ONLY (e.g. "$5 and $10", where the
+      // candidate content "5 and " is really currency, not math).
       // The tight form must run first or a tight snippet's closing $ can
       // mispair with the following snippet's opening $.
       t = t.replace(/\$(?!\s)([^$\n]+?)(?<!\s)\$/g, (_, m) => add("inline", m));
-      t = t.replace(/\$[ \t]+([^$\n]+?)[ \t]+\$/g, (_, m) => add("inline", m));
+      t = t.replace(/\$[ \t]+([^$\n]+?)[ \t]*\$/g, (_, m) => add("inline", m));
       return t;
     });
     return { text: out.join("").replace(new RegExp(ESC, "g"), "\\$"), snippets };
