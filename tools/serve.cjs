@@ -92,6 +92,29 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  if (url.pathname === "/api/publish" && req.method === "POST") {
+    let body = "";
+    req.on("data", (c) => (body += c));
+    req.on("end", () => {
+      let message = "Update site";
+      try {
+        const m = JSON.parse(body).message;
+        if (typeof m === "string" && m.trim()) message = m.trim();
+      } catch {}
+      execFile(
+        path.join(root, "publish.sh"),
+        [message],
+        { cwd: root, timeout: 180000 },
+        (err, stdout, stderr) => {
+          const output = `${stdout}${stderr}`.trim();
+          if (err) return json(res, 500, { ok: false, output });
+          json(res, 200, { ok: true, nothing: output.includes("Nothing to publish"), output });
+        }
+      );
+    });
+    return;
+  }
+
   // static files
   let p = decodeURIComponent(url.pathname);
   if (p.includes("..")) return json(res, 400, { error: "bad path" });

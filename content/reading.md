@@ -8,3 +8,8 @@ Currently reading:
 
 Some of my favorites:
 - *The Boys in the Boat* by Daniel James Brown^[This was a book recommended by Ali Ghodsi, CEO of Databricks.]
+
+Other reads:
+- *The Vegetarian* by Han Kang
+- *Why Fish Don't Exist* by Lulu Miller
+- *How to Win Friends & Influence People* by Dale Carnegie
