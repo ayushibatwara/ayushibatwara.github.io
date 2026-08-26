@@ -1,72 +1,44 @@
-Welcome to the source repo for my website! 
+# ayushibatwara.github.io
 
-# Getting Started with Create React App
+Personal website, rendered by GitHub Pages with Jekyll. Edit the markdown, push to `main`, and the site rebuilds automatically — no build step.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Pages
 
-## Available Scripts
+- `index.md` — home
+- `reading.md` — /reading/
+- `writing.md` — /writing/
 
-In the project directory, you can run:
+To add a page: create `foo.md` with the same front matter (`layout: default`, `title:`, `permalink: /foo/`) and add a link to it in `_layouts/default.html`.
 
-### `npm start`
+## Sidenotes
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Numbered sidenote (the `id` just needs to be unique within the page):
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```
+Some text{% raw %}{% include sidenote.html id="1" note="The note text." %}{% endraw %} continues here.
+```
 
-### `npm test`
+Unnumbered margin note:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```
+{% raw %}{% include marginnote.html id="a" note="The note text." %}{% endraw %}
+```
 
-### `npm run build`
+Small-caps lead-in for a paragraph:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```
+<span class="newthought">These notes</span> form a concise...
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Styling
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Everything lives in `assets/css/style.css`. The accent color is `#003262` (the `--accent` variable at the top).
 
-### `npm run eject`
+## Local preview (optional)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```
+gem install bundler && bundle install
+bundle exec jekyll serve
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Then open http://localhost:4000.

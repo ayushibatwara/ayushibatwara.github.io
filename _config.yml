@@ -1,0 +1,9 @@
+title: Ayushi Batwara
+url: "https://ayushibatwara.github.io"
+markdown: kramdown
+permalink: pretty
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - vendor
