@@ -15,6 +15,26 @@ function convertSidenotes(md) {
 }
 
 (async function () {
+  const footer = document.getElementById("last-updated");
+  if (!footer) return;
+  try {
+    const res = await fetch(
+      "https://api.github.com/repos/ayushibatwara/ayushibatwara.github.io/commits?sha=main&per_page=1"
+    );
+    if (!res.ok) return;
+    const [latest] = await res.json();
+    const date = new Date(latest.commit.committer.date).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    footer.textContent = `last updated on ${date}`;
+  } catch (err) {
+    // leave the footer empty if the API is unreachable
+  }
+})();
+
+(async function () {
   const article = document.querySelector("article[data-md]");
   if (!article) return;
   try {
