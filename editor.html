@@ -43,6 +43,15 @@
     }
     .editor-bar button:hover { border-color: var(--accent); color: var(--accent); }
     .editor-bar .status { color: #9a9a9a; font-style: italic; min-width: 5rem; }
+    .editor-bar input {
+      font: inherit;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      padding: 0.15rem 0.5rem;
+      width: 16rem;
+    }
+    #publish-btn { color: var(--accent); border-color: var(--accent); }
+    #publish-btn:disabled { opacity: 0.5; cursor: default; }
     .editor-bar .spacer { flex: 1; }
     .editor-bar a { font-size: 0.95rem; }
     .editor-split {
@@ -84,8 +93,11 @@
   <div class="editor-bar" id="editor-bar">
     <select id="file-select"></select>
     <button id="new-draft">new draft</button>
+    <input id="draft-name" placeholder="draft name, then Enter" style="display:none">
     <span class="status" id="save-status">saved</span>
     <span class="spacer"></span>
+    <input id="commit-msg" placeholder="commit message">
+    <button id="publish-btn">publish</button>
     <a id="page-link" href="/" target="_blank">open page ↗</a>
   </div>
   <div class="editor-split" id="editor-split">

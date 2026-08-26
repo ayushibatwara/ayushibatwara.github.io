@@ -103,11 +103,22 @@
 
   select.addEventListener("change", () => openFile(select.value));
 
-  document.getElementById("new-draft").addEventListener("click", async () => {
-    const name = prompt("Draft name (becomes drafts/<name>.md):");
-    if (!name) return;
-    const slug = name.toLowerCase().trim().replace(/[^\w-]+/g, "-").replace(/^-+|-+$/g, "");
+  const draftName = document.getElementById("draft-name");
+  document.getElementById("new-draft").addEventListener("click", () => {
+    draftName.style.display = "inline-block";
+    draftName.focus();
+  });
+  draftName.addEventListener("keydown", async (e) => {
+    if (e.key === "Escape") {
+      draftName.value = "";
+      draftName.style.display = "none";
+    }
+    if (e.key !== "Enter") return;
+    const name = draftName.value.trim();
+    const slug = name.toLowerCase().replace(/[^\w-]+/g, "-").replace(/^-+|-+$/g, "");
     if (!slug) return;
+    draftName.value = "";
+    draftName.style.display = "none";
     const file = `drafts/${slug}.md`;
     await fetch("/api/save", {
       method: "POST",
@@ -115,6 +126,35 @@
       body: JSON.stringify({ path: file, text: `# ${name}\n\n` }),
     });
     await loadList(file);
+  });
+
+  const publishBtn = document.getElementById("publish-btn");
+  const commitMsg = document.getElementById("commit-msg");
+  async function publish() {
+    publishBtn.disabled = true;
+    await save();
+    setStatus("publishing…");
+    try {
+      const res = await fetch("/api/publish", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: commitMsg.value }),
+      });
+      const out = await res.json();
+      console.log(out.output);
+      if (!out.ok) throw new Error(out.output);
+      setStatus(out.nothing ? "nothing to publish" : "published ✓");
+      if (!out.nothing) commitMsg.value = "";
+    } catch (err) {
+      setStatus("PUBLISH FAILED — see console");
+      console.error(err);
+    } finally {
+      publishBtn.disabled = false;
+    }
+  }
+  publishBtn.addEventListener("click", publish);
+  commitMsg.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") publish();
   });
 
   window.addEventListener("beforeunload", (e) => {
