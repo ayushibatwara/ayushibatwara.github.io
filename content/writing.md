@@ -6,4 +6,4 @@
 
 ## Essays
 
-- *Nothing here yet.*
+- [Quotes](/writing/quotes/)
