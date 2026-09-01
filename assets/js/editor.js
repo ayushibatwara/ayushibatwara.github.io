@@ -64,6 +64,7 @@
     pageLink.href = pageUrlFor(file);
     history.replaceState(null, "", `/editor.html?f=${file}`);
     setStatus("saved");
+    updatePromote();
     render();
   }
 
@@ -127,6 +128,69 @@
       body: JSON.stringify({ path: file, text: `# ${name}\n\n` }),
     });
     await loadList(file);
+  });
+
+  // "move to writing": promotes the open draft to content/writing/ and lists
+  // it on the Writing page (see /api/promote in tools/serve.cjs). The button
+  // reveals a select of the "## …" sections in content/writing.md; picking
+  // one does the move. Nothing is committed — that's still the publish button.
+  const promoteBtn = document.getElementById("promote-btn");
+  const promoteSection = document.getElementById("promote-section");
+
+  function updatePromote() {
+    promoteBtn.style.display = current && current.startsWith("drafts/") ? "" : "none";
+    promoteSection.style.display = "none";
+  }
+
+  promoteBtn.addEventListener("click", async () => {
+    const md = await (await fetch("/api/file?f=content/writing.md")).text();
+    const sections = [...md.matchAll(/^##\s+(.+)$/gm)].map((s) => s[1].trim());
+    if (!sections.length) {
+      setStatus("no ## sections in content/writing.md");
+      return;
+    }
+    promoteSection.innerHTML = "";
+    const placeholder = document.createElement("option");
+    placeholder.textContent = "section…";
+    placeholder.value = "";
+    placeholder.disabled = true;
+    placeholder.selected = true;
+    promoteSection.appendChild(placeholder);
+    for (const s of sections) {
+      const opt = document.createElement("option");
+      opt.value = s;
+      opt.textContent = s;
+      promoteSection.appendChild(opt);
+    }
+    promoteSection.style.display = "inline-block";
+    promoteSection.focus();
+  });
+
+  promoteSection.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") promoteSection.style.display = "none";
+  });
+
+  promoteSection.addEventListener("change", async () => {
+    const section = promoteSection.value;
+    if (!section) return;
+    promoteSection.style.display = "none";
+    await save();
+    setStatus("moving…");
+    try {
+      const res = await fetch("/api/promote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ path: current, section }),
+      });
+      const out = await res.json();
+      if (!out.ok) throw new Error(out.error || "promote failed");
+      if (out.mathError) console.error(out.mathError);
+      await loadList(out.file);
+      setStatus("moved to writing ✓");
+    } catch (err) {
+      setStatus("MOVE FAILED — see console");
+      console.error(err);
+    }
   });
 
   const publishBtn = document.getElementById("publish-btn");

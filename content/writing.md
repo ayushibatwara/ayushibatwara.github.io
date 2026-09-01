@@ -2,7 +2,7 @@
 
 ## Technical
 
-- *Nothing here yet.*
+- [Neural Posterior Estimation](/writing/npe/)
 
 ## Essays
 

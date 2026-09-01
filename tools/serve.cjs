@@ -4,6 +4,8 @@
 //   GET  /api/files          -> { files: ["content/home.md", "drafts/x.md", ...] }
 //   GET  /api/file?f=<path>  -> raw markdown
 //   POST /api/save           -> { path, text }  writes the file, re-renders math
+//   POST /api/promote        -> { path, section }  moves a draft to content/writing/,
+//                               scaffolds its page, lists it on the Writing page
 // Only *.md files under content/ and drafts/ are readable/writable.
 // Binds to 127.0.0.1 — never exposed beyond this machine.
 
@@ -53,6 +55,37 @@ function json(res, code, obj) {
   res.end(JSON.stringify(obj));
 }
 
+// Insert a list entry at the end of one "## section" block of writing.md,
+// dropping the "*Nothing here yet.*" placeholder if it's still there.
+// Returns null if the section heading doesn't exist.
+function addToSection(list, section, entry) {
+  const lines = list.split("\n");
+  const isHeading = (l) => /^##\s/.test(l);
+  const start = lines.findIndex((l) => isHeading(l) && l.replace(/^##\s+/, "").trim() === section);
+  if (start === -1) return null;
+  let end = lines.length;
+  for (let i = start + 1; i < lines.length; i++) {
+    if (isHeading(lines[i])) {
+      end = i;
+      break;
+    }
+  }
+  let insertAt = -1;
+  for (let i = start + 1; i < end; i++) {
+    if (/^-\s+\*Nothing here yet\.\*\s*$/.test(lines[i])) {
+      lines.splice(i, 1);
+      end--;
+      i--;
+    } else if (lines[i].trim() !== "") {
+      insertAt = i + 1;
+    }
+  }
+  if (insertAt !== -1) lines.splice(insertAt, 0, entry);
+  else if (start + 1 < end && lines[start + 1].trim() === "") lines.splice(start + 2, 0, entry);
+  else lines.splice(start + 1, 0, "", entry);
+  return lines.join("\n");
+}
+
 function renderMath(cb) {
   execFile("node", [path.join(__dirname, "render-math.cjs"), "--quiet"], (err, stdout, stderr) => {
     cb(err ? String(stderr || err.message).trim() : null, String(stdout).trim());
@@ -88,6 +121,59 @@ const server = http.createServer((req, res) => {
       fs.mkdirSync(path.dirname(abs), { recursive: true });
       fs.writeFileSync(abs, payload.text);
       renderMath((mathErr, mathOut) => json(res, 200, { ok: true, mathError: mathErr, math: mathOut }));
+    });
+    return;
+  }
+
+  if (url.pathname === "/api/promote" && req.method === "POST") {
+    let body = "";
+    req.on("data", (c) => (body += c));
+    req.on("end", () => {
+      let payload;
+      try {
+        payload = JSON.parse(body);
+      } catch {
+        return json(res, 400, { error: "bad json" });
+      }
+      const m = typeof payload.path === "string" && payload.path.match(/^drafts\/([\w-]+)\.md$/);
+      if (!m)
+        return json(res, 400, {
+          error: "only drafts with simple slug names (letters, digits, - and _) can be promoted",
+        });
+      const slug = m[1];
+      const section = typeof payload.section === "string" ? payload.section.trim() : "";
+      const src = path.join(root, payload.path);
+      const dest = path.join(root, "content/writing", `${slug}.md`);
+      if (!fs.existsSync(src)) return json(res, 404, { error: "draft not found" });
+      if (fs.existsSync(dest)) return json(res, 409, { error: `content/writing/${slug}.md already exists` });
+
+      const text = fs.readFileSync(src, "utf8");
+      const titleMatch = text.match(/^#\s+(.+)$/m);
+      const title = titleMatch ? titleMatch[1].trim() : slug;
+
+      const listPath = path.join(root, "content/writing.md");
+      const updatedList = addToSection(
+        fs.readFileSync(listPath, "utf8"),
+        section,
+        `- [${title}](/writing/${slug}/)`
+      );
+      if (updatedList === null)
+        return json(res, 400, { error: `no "## ${section}" section in content/writing.md` });
+
+      fs.mkdirSync(path.dirname(dest), { recursive: true });
+      fs.renameSync(src, dest);
+      fs.writeFileSync(listPath, updatedList);
+      execFile(
+        path.join(root, "tools/new-piece.sh"),
+        [slug, title],
+        { cwd: root, timeout: 30000 },
+        (err, stdout, stderr) => {
+          if (err) return json(res, 500, { error: String(stderr || err.message).trim() });
+          renderMath((mathErr) =>
+            json(res, 200, { ok: true, file: `content/writing/${slug}.md`, mathError: mathErr })
+          );
+        }
+      );
     });
     return;
   }
