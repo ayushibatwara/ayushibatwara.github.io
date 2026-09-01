@@ -15,7 +15,7 @@ I think the real world today operates at 2.25, where humans are still responsibl
 
 $$
 #quote(block: true, attribution: [Nicholas Carlini \ September 1, 2026 · The Gateway])[
-  Researchers is dead.
+  Research is dead.
 ]
 $$
 
