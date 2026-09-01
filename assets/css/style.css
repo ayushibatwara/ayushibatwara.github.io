@@ -177,7 +177,13 @@ label.margin-toggle {
 /* ---- Typst math (pre-rendered SVGs from tools/render-math.cjs) ---- */
 
 img.math-inline {
-  vertical-align: -0.2em;
+  /* Inline SVGs carry 7pt of vertical padding so tall glyphs aren't cropped
+     (see typstSource in tools/render-math.cjs). The negative margins cancel
+     it so lines with math don't spread, and vertical-align drops the SVG so
+     its baseline (3.06pt descender + 7pt padding above the bottom edge, at
+     the site's 15.75pt math size) lands on the text baseline. */
+  margin: -5.5pt 0;
+  vertical-align: -4.56pt;
 }
 
 img.math-display {

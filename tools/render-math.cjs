@@ -27,9 +27,23 @@ function mdFiles(dir) {
 }
 
 // 15.75pt ≈ the site's 21px body text, so math matches the prose size.
+//
+// Inline snippets need extra care: Typst sizes the auto page from the line's
+// font metrics, and tall glyphs (a text-style integral, say) paint outside
+// them and get cropped by the SVG viewBox. Ascender/descender edges put the
+// baseline at the same offset in every inline SVG, and the 7pt vertical
+// margin leaves room for the overflow; style.css cancels the padding with
+// negative margins and realigns the baseline with a fixed vertical-align,
+// so these numbers and the img.math-inline rule must move together.
 function typstSource({ mode, content }) {
-  const body = mode === "display" ? `$ ${content} $` : `$${content}$`;
-  return `#set page(width: auto, height: auto, margin: 1.5pt)\n#set text(size: 15.75pt)\n${body}\n`;
+  if (mode === "display") {
+    return `#set page(width: auto, height: auto, margin: 1.5pt)\n#set text(size: 15.75pt)\n$ ${content} $\n`;
+  }
+  return (
+    "#set page(width: auto, height: auto, margin: (x: 1.5pt, y: 7pt))\n" +
+    '#set text(size: 15.75pt, top-edge: "ascender", bottom-edge: "descender")\n' +
+    `$${content}$\n`
+  );
 }
 
 const snippets = new Map();
