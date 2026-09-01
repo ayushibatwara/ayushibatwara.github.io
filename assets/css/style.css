@@ -177,18 +177,31 @@ label.margin-toggle {
 /* ---- Typst math (pre-rendered SVGs from tools/render-math.cjs) ---- */
 
 img.math-inline {
-  /* Inline SVGs carry 7pt of vertical padding so tall glyphs aren't cropped
-     (see typstSource in tools/render-math.cjs). The negative margins cancel
-     it so lines with math don't spread, and vertical-align drops the SVG so
-     its baseline (3.06pt descender + 7pt padding above the bottom edge, at
-     the site's 15.75pt math size) lands on the text baseline. */
-  margin: -5.5pt 0;
-  vertical-align: -4.56pt;
+  /* Inline SVGs share one geometry — 29.75pt tall at 15.75pt math size, with
+     7pt of vertical padding so tall glyphs aren't cropped (see typstSource in
+     tools/render-math.cjs). Sizing in em (values below are pt / 15.75) makes
+     the math track the surrounding font size, so it shrinks inside sidenotes
+     instead of towering over their smaller text. The negative margins cancel
+     the padding so lines with math don't spread, and vertical-align drops the
+     SVG so its baseline (3.06pt descender + 7pt padding above the bottom
+     edge) lands on the text baseline. */
+  height: 1.8889em; /* 29.75pt */
+  margin: -0.3492em 0; /* -5.5pt */
+  vertical-align: -0.2892em; /* -4.56pt */
 }
 
 img.math-display {
   display: block;
   margin: 2rem auto;
+  max-width: 100%;
+}
+
+/* marked emits display math as a direct child of article, so margin:auto
+   centers it on the full article width; shift it left so it's centered on
+   the 60% text column instead (half of the 40% margin). */
+article > img.math-display {
+  position: relative;
+  left: -20%;
 }
 
 /* ---- Footer ---- */
@@ -227,6 +240,10 @@ img.math-display {
   article > blockquote,
   article > hr {
     width: 100%;
+  }
+
+  article > img.math-display {
+    left: 0; /* text column is full-width here, so plain centering is right */
   }
 
   label.margin-toggle:not(.sidenote-number) {
