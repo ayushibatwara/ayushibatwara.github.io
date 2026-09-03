@@ -11,3 +11,4 @@
 ## Notes
 
 - [Bayesian Foundations](/writing/bayesian-foundations/)
+- [Arriving to MCMC](/writing/arriving-to-mcmc/)

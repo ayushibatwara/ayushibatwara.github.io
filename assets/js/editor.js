@@ -26,6 +26,7 @@
     const { text } = TypstMath.transformMath(textarea.value);
     preview.innerHTML = marked.parse(convertSidenotes(convertHighlights(text)));
     layoutSidenotes(preview);
+    queueSync(); // re-aim the preview at the cursor once the fresh DOM is in
   }
 
   function setStatus(s) {
@@ -324,6 +325,46 @@
     applySplit(44);
     saveSplit(44);
     layoutSidenotes(preview);
+  });
+
+  // Keep the preview following the cursor: find which block of the source
+  // the cursor sits in (marked's lexer gives block boundaries on the same
+  // math-transformed text the preview is rendered from), then scroll the
+  // matching top-level preview element into view if it isn't visible.
+  let syncTimer = null;
+
+  function syncPreviewToCursor() {
+    const src = textarea.value;
+    const { text: full } = TypstMath.transformMath(src);
+    const { text: prefix } = TypstMath.transformMath(src.slice(0, textarea.selectionStart));
+    const starts = [];
+    let acc = 0;
+    for (const tok of marked.lexer(full)) {
+      if (tok.type !== "space") starts.push(acc);
+      acc += tok.raw.length;
+    }
+    let idx = 0;
+    for (let i = 0; i < starts.length; i++) if (starts[i] <= prefix.length) idx = i;
+    const el = preview.children[Math.min(idx, preview.children.length - 1)];
+    if (!el) return;
+    const paneEl = preview.parentElement;
+    const pane = paneEl.getBoundingClientRect();
+    const r = el.getBoundingClientRect();
+    if (r.top >= pane.top && r.bottom <= pane.bottom) return; // already in view
+    // scrollTo, not scrollIntoView: Chrome quietly drops smooth
+    // scrollIntoView on this pane
+    const top = r.top - pane.top + paneEl.scrollTop - (paneEl.clientHeight - r.height) / 2;
+    paneEl.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+  }
+
+  function queueSync() {
+    clearTimeout(syncTimer);
+    syncTimer = setTimeout(syncPreviewToCursor, 200);
+  }
+
+  // fires for caret moves in the textarea: clicks, arrows, and typing
+  document.addEventListener("selectionchange", () => {
+    if (document.activeElement === textarea) queueSync();
   });
 
   window.addEventListener("beforeunload", (e) => {
