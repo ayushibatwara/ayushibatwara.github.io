@@ -118,16 +118,35 @@ The Metropolis-Hastings algorithm seeks to sample from a desired probability dis
 
 We do this by constructing a Markov chain that is aperiodic, positive-recurrent, and exhibits detailed balance (a necessary but sufficient condition for the existence of a stationary distribution). Thus, this constructed Markov chain will have a unique stationary distribution, which we will set to $p(x)$. 
 
-The Metropolis-Hastings algorithm associated with a target density $pi$ requires the choice of an easier density $q$ (aka proposal or candidate kernel). Given $X^(t) = x^((t))$ and $pi(x) prop tilde(pi)(x)$^[Assuming the target distribution can only be computed up to a multiplying constant.], 
+We start with detailed balance:
+$$p(x) p(y | x) = p(y) p(x | y)$$
+
+We break up the transition to two steps: proposal and acceptance. We define $q$ as the proposal distribution, where $q(x|y)$ represents the conditional probability of proposing state $x$ given $y$. We define $A$ as the acceptance distribution, where $A(x, y)$ is the probability to accept the proposed state $x$. 
+
+Then, we have:
+$$p(x | y) = q(x | y) A(y, x) $$
+
+Inserting this into detailed balance equations:
+$$
+A(y, x) / A(x, y) = p(y) / p(x) g(x | y) / g(y | x)
+$$
+
+Finally, we choose an acceptance ratio that fulfills the condition above. The Metropolis choice is:
+
+$$
+A(y, x) = min ( 1, p(y) / p(x) g(x | y) / g(y | x))
+$$
+
+One of $A(y, x)$ and $A(x, y)$ will be 1, so the condition is satisfied.
+
+Succinctly, the Metropolis-Hastings algorithm associated with a target density $pi$ requires the choice of an easier proposal density $q$ (aka candidate kernel). Given $X^(t) = x^((t))$ and $pi(x) prop tilde(pi)(x)$^[Assuming the target distribution can only be computed up to a multiplying constant.], 
 1. Generate $Y_t ~ q(y|x^((t)))$
 2. Take 
 $$X^(t+1) = cases(
-  Y_t & "with probability" rho(x^((t)), Y_t),
-  x^((t)) & "with probability" 1 - rho(x^((t)), Y_t),
+  Y_t & "with probability" A(x^((t)), Y_t),
+  x^((t)) & "with probability" 1 - A(x^((t)), Y_t),
 ) \
-"where" rho(x, y) =min{ frac(tilde(pi)(y), tilde(pi)(x)) frac(q(x | y), q(y | x)), 1 }
+"where" A(x, y) =min{ frac(tilde(pi)(y), tilde(pi)(x)) frac(q(x | y), q(y | x)), 1 }
 $$
-
-
 
 The choice of $q$ is flexible, but the choice affects its ability to converge to the target density $p$. 
