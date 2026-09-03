@@ -2,7 +2,9 @@
 // sides agree exactly on what counts as math and which SVG file it maps to.
 //
 // Syntax: $...$ for inline Typst math (no space just inside the $),
-// $$...$$ for display math, \$ for a literal dollar sign.
+// $$...$$ for display math, \$ for a literal dollar sign. A ```typst fenced
+// block renders as Typst *content* (quotes, figures, ...) on a page as wide
+// as the text column, so long lines wrap in Typst instead of overflowing.
 (function (global) {
   const ESC = "\u0000D\u0000"; // placeholder for \$ (control char cannot appear in prose)
 
@@ -47,17 +49,24 @@
         seen.add(hash);
         snippets.push({ mode, content, hash });
       }
-      const cls = mode === "display" ? "math math-display" : "math math-inline";
+      const cls = `math math-${mode === "display" ? "display" : mode === "typst" ? "typst" : "inline"}`;
       const img = `<img class="${cls}" src="${svgPath(hash)}" alt="${escapeHtml(content)}">`;
       // Display math gets a wrapper so CSS can center it in the text column
-      // and hang an equation number off it (see .math-block in style.css).
-      return mode === "display" ? `<span class="math-block">${img}</span>` : img;
+      // and hang an equation number off it (see .math-block in style.css);
+      // typst blocks get an unnumbered wrapper.
+      if (mode === "display") return `<span class="math-block">${img}</span>`;
+      if (mode === "typst") return `<span class="typst-block">${img}</span>`;
+      return img;
     }
 
     const protectedMd = md.replace(/\\\$/g, ESC);
     const parts = protectedMd.split(/(```[\s\S]*?```|~~~[\s\S]*?~~~|`[^`\n]*`)/);
     const out = parts.map((part, i) => {
-      if (i % 2 === 1) return part; // code — leave alone
+      if (i % 2 === 1) {
+        const typst = part.match(/^```typst\n([\s\S]*?)\n?```$/);
+        if (typst) return `\n\n${add("typst", typst[1])}\n\n`;
+        return part; // other code — leave alone
+      }
       let t = part.replace(/\$\$([\s\S]+?)\$\$/g, (_, m) => `\n\n${add("display", m)}\n\n`);
       // inline math: $x$, $ x $, or $ x$ all work. The one shape rejected
       // is a space before the closing $ ONLY (e.g. "$5 and $10", where the
