@@ -221,6 +221,18 @@ img.math-display {
   position: relative;
 }
 
+/* ```typst content blocks (quotes etc.) — rendered at the text column's
+   width so they land 1:1; no equation number. */
+.typst-block {
+  display: block;
+}
+
+img.math-typst {
+  display: block;
+  margin: 2rem auto;
+  max-width: 100%;
+}
+
 .math-block::after {
   counter-increment: equation;
   content: "(" counter(equation) ")";

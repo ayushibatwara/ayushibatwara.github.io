@@ -36,6 +36,19 @@ function mdFiles(dir) {
 // negative margins and realigns the baseline with a fixed vertical-align,
 // so these numbers and the img.math-inline rule must move together.
 function typstSource({ mode, content }) {
+  if (mode === "typst") {
+    // Content blocks (```typst fences): fixed page width = the site's 60%
+    // text column (544px ≈ 408pt), so Typst wraps long lines itself and the
+    // SVG renders 1:1 without CSS downscaling. New Computer Modern matches
+    // the math snippets' text face.
+    // bottom margin leaves room for the last line's descenders, which the
+    // auto page height (sized from baseline metrics) would otherwise crop
+    return (
+      "#set page(width: 408pt, height: auto, margin: (x: 1.5pt, top: 1.5pt, bottom: 5pt))\n" +
+      '#set text(font: "New Computer Modern", size: 15.75pt)\n' +
+      `${content}\n`
+    );
+  }
   if (mode === "display") {
     return `#set page(width: auto, height: auto, margin: 1.5pt)\n#set text(size: 15.75pt)\n$ ${content} $\n`;
   }
