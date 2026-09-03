@@ -51,6 +51,8 @@
       width: 16rem;
     }
     #publish-btn { color: var(--accent); border-color: var(--accent); }
+    #delete-btn { color: #8a1f1f; border-color: #d6a3a3; }
+    #delete-btn:hover { color: #8a1f1f; border-color: #8a1f1f; }
     #publish-btn:disabled { opacity: 0.5; cursor: default; }
     .editor-bar .spacer { flex: 1; }
     .editor-bar a { font-size: 0.95rem; }
@@ -63,11 +65,19 @@
       width: 44%;
       resize: none;
       border: none;
-      border-right: 1px solid #e5e5e5;
       outline: none;
       padding: 2rem 1.5rem;
       font: 14px/1.6 ui-monospace, "SF Mono", Menlo, monospace;
       color: #222;
+    }
+    .pane-divider {
+      flex: 0 0 6px;
+      cursor: col-resize;
+      border-left: 1px solid #e5e5e5;
+    }
+    .pane-divider:hover,
+    .pane-divider.dragging {
+      border-left-color: var(--accent);
     }
     .pane-preview {
       flex: 1;
@@ -94,6 +104,7 @@
     <select id="file-select"></select>
     <button id="new-draft">new draft</button>
     <input id="draft-name" placeholder="draft name, then Enter" style="display:none">
+    <button id="delete-btn" style="display:none">delete</button>
     <span class="status" id="save-status">saved</span>
     <span class="spacer"></span>
     <button id="promote-btn" style="display:none"
@@ -105,6 +116,7 @@
   </div>
   <div class="editor-split" id="editor-split">
     <textarea id="editor-text" spellcheck="true" placeholder="Write markdown here…"></textarea>
+    <div class="pane-divider" id="pane-divider" title="drag to resize, double-click to reset"></div>
     <div class="pane-preview"><article id="preview"></article></div>
   </div>
   <script src="/assets/js/marked.min.js"></script>

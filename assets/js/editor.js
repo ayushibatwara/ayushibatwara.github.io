@@ -24,7 +24,7 @@
 
   function render() {
     const { text } = TypstMath.transformMath(textarea.value);
-    preview.innerHTML = marked.parse(convertSidenotes(text));
+    preview.innerHTML = marked.parse(convertSidenotes(convertHighlights(text)));
     layoutSidenotes(preview);
   }
 
@@ -65,6 +65,7 @@
     history.replaceState(null, "", `/editor.html?f=${file}`);
     setStatus("saved");
     updatePromote();
+    updateDelete();
     render();
   }
 
@@ -94,6 +95,18 @@
     if ((e.metaKey || e.ctrlKey) && e.key === "s") {
       e.preventDefault();
       save();
+    }
+    // Cmd+Shift+H: toggle ==highlight== around the selection
+    if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key.toLowerCase() === "h") {
+      e.preventDefault();
+      const { selectionStart: s, selectionEnd: end, value } = textarea;
+      const sel = value.slice(s, end);
+      const toggled =
+        sel.length >= 4 && sel.startsWith("==") && sel.endsWith("==")
+          ? sel.slice(2, -2)
+          : `==${sel}==`;
+      textarea.setRangeText(toggled, s, end, "select");
+      textarea.dispatchEvent(new Event("input"));
     }
     if (e.key === "Tab") {
       e.preventDefault();
@@ -128,6 +141,50 @@
       body: JSON.stringify({ path: file, text: `# ${name}\n\n` }),
     });
     await loadList(file);
+  });
+
+  // "delete": removes the open file — drafts and writing pieces only, never
+  // home/reading/the Writing index (the server enforces the same rule). Two
+  // clicks required: the first arms the button for a few seconds.
+  const deleteBtn = document.getElementById("delete-btn");
+  let deleteTimer = null;
+
+  function disarmDelete() {
+    clearTimeout(deleteTimer);
+    deleteTimer = null;
+    deleteBtn.textContent = "delete";
+  }
+
+  function updateDelete() {
+    const deletable = !!current && /^(drafts|content\/writing)\/[\w-]+\.md$/.test(current);
+    deleteBtn.style.display = deletable ? "" : "none";
+    disarmDelete();
+  }
+
+  deleteBtn.addEventListener("click", async () => {
+    if (!deleteTimer) {
+      deleteBtn.textContent = "really delete?";
+      deleteTimer = setTimeout(disarmDelete, 4000);
+      return;
+    }
+    disarmDelete();
+    dirty = false; // drop any pending autosave of the file we're deleting
+    clearTimeout(saveTimer);
+    setStatus("deleting…");
+    try {
+      const res = await fetch("/api/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ path: current }),
+      });
+      const out = await res.json();
+      if (!out.ok) throw new Error(out.error || "delete failed");
+      await loadList();
+      setStatus("deleted");
+    } catch (err) {
+      setStatus("DELETE FAILED — see console");
+      console.error(err);
+    }
   });
 
   // "move to writing": promotes the open draft to content/writing/ and lists
@@ -220,6 +277,53 @@
   publishBtn.addEventListener("click", publish);
   commitMsg.addEventListener("keydown", (e) => {
     if (e.key === "Enter") publish();
+  });
+
+  // Draggable divider between the editor and preview panes. The chosen split
+  // is remembered in localStorage; double-click resets to the 44% default.
+  const splitPane = document.getElementById("editor-split");
+  const divider = document.getElementById("pane-divider");
+  const SPLIT_KEY = "editor-split-percent";
+
+  function applySplit(pct) {
+    textarea.style.width = pct + "%";
+  }
+
+  function saveSplit(pct) {
+    try {
+      localStorage.setItem(SPLIT_KEY, pct);
+    } catch {}
+  }
+
+  try {
+    const saved = parseFloat(localStorage.getItem(SPLIT_KEY));
+    if (saved >= 15 && saved <= 85) applySplit(saved);
+  } catch {}
+
+  divider.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+    divider.classList.add("dragging");
+    const rect = splitPane.getBoundingClientRect();
+    let pct = parseFloat(textarea.style.width) || 44;
+    function move(ev) {
+      pct = Math.min(85, Math.max(15, ((ev.clientX - rect.left) / rect.width) * 100));
+      applySplit(pct);
+    }
+    function up() {
+      document.removeEventListener("mousemove", move);
+      document.removeEventListener("mouseup", up);
+      divider.classList.remove("dragging");
+      saveSplit(pct);
+      layoutSidenotes(preview); // sidenote positions depend on pane width
+    }
+    document.addEventListener("mousemove", move);
+    document.addEventListener("mouseup", up);
+  });
+
+  divider.addEventListener("dblclick", () => {
+    applySplit(44);
+    saveSplit(44);
+    layoutSidenotes(preview);
   });
 
   window.addEventListener("beforeunload", (e) => {

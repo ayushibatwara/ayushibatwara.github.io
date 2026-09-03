@@ -7,3 +7,7 @@
 ## Essays
 
 - [Quotes](/writing/quotes/)
+
+## Notes
+
+- [Bayesian Foundations](/writing/bayesian-foundations/)

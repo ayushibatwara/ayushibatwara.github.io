@@ -1,6 +1,18 @@
 // Fetches the page's markdown file, converts ^[...] sidenote syntax to
 // Tufte-style margin notes, and renders the result with marked.
 
+// ==text== -> <mark>text</mark>, skipping code blocks and inline code.
+// The opening == must touch the first character and the closing == the last,
+// so comparison operators in prose ("a == b") are left alone.
+function convertHighlights(md) {
+  return md
+    .split(/(```[\s\S]*?```|~~~[\s\S]*?~~~|`[^`\n]*`)/)
+    .map((part, i) =>
+      i % 2 ? part : part.replace(/==(\S(?:[^\n=]*?\S)?)==/g, "<mark>$1</mark>")
+    )
+    .join("");
+}
+
 function convertSidenotes(md) {
   let n = 0;
   // ^[note text] — note text may contain [links](...) one level deep
@@ -9,7 +21,9 @@ function convertSidenotes(md) {
     return (
       `<label for="sn-${n}" class="margin-toggle sidenote-number"></label>` +
       `<input type="checkbox" id="sn-${n}" class="margin-toggle">` +
-      `<span class="sidenote">${marked.parseInline(note)}</span>`
+      // newlines collapse to spaces: inside a list item, marked would treat
+      // a line holding only an <img> as a block and split it out of the span
+      `<span class="sidenote">${marked.parseInline(note).replace(/\n/g, " ")}</span>`
     );
   });
 }
@@ -38,6 +52,15 @@ function convertSidenotes(md) {
 // notes down as needed so they never overlap.
 function layoutSidenotes(article) {
   const notes = article.querySelectorAll(".sidenote, .marginnote");
+  // Note heights depend on images (math SVGs) that may still be loading;
+  // measure again once each one lands so notes don't overlap. The dataset
+  // flag keeps repeat layout calls from stacking up duplicate listeners.
+  article.querySelectorAll("img").forEach((img) => {
+    if (!img.complete && !img.dataset.relayout) {
+      img.dataset.relayout = "1";
+      img.addEventListener("load", () => layoutSidenotes(article), { once: true });
+    }
+  });
   if (window.matchMedia("(max-width: 760px)").matches) {
     notes.forEach((n) => (n.style.top = ""));
     article.style.minHeight = "";
@@ -69,7 +92,9 @@ function layoutSidenotes(article) {
     const res = await fetch(src);
     if (!res.ok) throw new Error(`${res.status} fetching ${src}`);
     const md = await res.text();
-    article.innerHTML = marked.parse(convertSidenotes(TypstMath.transformMath(md).text));
+    article.innerHTML = marked.parse(
+      convertSidenotes(convertHighlights(TypstMath.transformMath(md).text))
+    );
     layoutSidenotes(article);
     // re-layout once webfonts land and whenever the window resizes
     document.fonts.ready.then(() => layoutSidenotes(article));
