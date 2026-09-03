@@ -6,6 +6,8 @@
 //   POST /api/save           -> { path, text }  writes the file, re-renders math
 //   POST /api/promote        -> { path, section }  moves a draft to content/writing/,
 //                               scaffolds its page, lists it on the Writing page
+//   POST /api/delete         -> { path }  deletes a draft or a writing piece (with its
+//                               page + Writing-list entry); top-level pages are refused
 // Only *.md files under content/ and drafts/ are readable/writable.
 // Binds to 127.0.0.1 — never exposed beyond this machine.
 
@@ -174,6 +176,39 @@ const server = http.createServer((req, res) => {
           );
         }
       );
+    });
+    return;
+  }
+
+  if (url.pathname === "/api/delete" && req.method === "POST") {
+    let body = "";
+    req.on("data", (c) => (body += c));
+    req.on("end", () => {
+      let payload;
+      try {
+        payload = JSON.parse(body);
+      } catch {
+        return json(res, 400, { error: "bad json" });
+      }
+      const p = typeof payload.path === "string" ? payload.path : "";
+      // Only drafts and writing pieces are deletable — never home, reading,
+      // or the Writing index itself. The [\w-]+ slug also blocks traversal.
+      const m = p.match(/^(?:drafts|content\/writing)\/([\w-]+)\.md$/);
+      if (!m) return json(res, 400, { error: "only drafts and writing pieces can be deleted" });
+      const abs = path.join(root, p);
+      if (!fs.existsSync(abs)) return json(res, 404, { error: "not found" });
+      fs.unlinkSync(abs);
+      if (p.startsWith("content/writing/")) {
+        const slug = m[1];
+        fs.rmSync(path.join(root, "writing", slug), { recursive: true, force: true });
+        const listPath = path.join(root, "content/writing.md");
+        const kept = fs
+          .readFileSync(listPath, "utf8")
+          .split("\n")
+          .filter((l) => !l.includes(`](/writing/${slug}/)`));
+        fs.writeFileSync(listPath, kept.join("\n"));
+      }
+      renderMath(() => json(res, 200, { ok: true }));
     });
     return;
   }

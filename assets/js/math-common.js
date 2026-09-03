@@ -17,12 +17,17 @@
     return h.toString(16).padStart(16, "0");
   }
 
+  // Also escapes [ and ]: the alt text lands in the markdown before the
+  // ^[...] sidenote pass runs, and literal brackets from math content would
+  // derail that regex mid-tag. Entities decode back to brackets in the DOM.
   function escapeHtml(s) {
     return s
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
+      .replace(/"/g, "&quot;")
+      .replace(/\[/g, "&#91;")
+      .replace(/\]/g, "&#93;");
   }
 
   function svgPath(hash) {
@@ -43,7 +48,10 @@
         snippets.push({ mode, content, hash });
       }
       const cls = mode === "display" ? "math math-display" : "math math-inline";
-      return `<img class="${cls}" src="${svgPath(hash)}" alt="${escapeHtml(content)}">`;
+      const img = `<img class="${cls}" src="${svgPath(hash)}" alt="${escapeHtml(content)}">`;
+      // Display math gets a wrapper so CSS can center it in the text column
+      // and hang an equation number off it (see .math-block in style.css).
+      return mode === "display" ? `<span class="math-block">${img}</span>` : img;
     }
 
     const protectedMd = md.replace(/\\\$/g, ESC);
