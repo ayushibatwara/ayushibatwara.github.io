@@ -3,8 +3,8 @@
 ## Technical
 
 ### Notes
-- [Neural Posterior Estimation](/writing/npe/)
-- [Bayesian Foundations](/writing/bayesian-foundations/)
+- [Neural posterior estimation](/writing/npe/)
+- [Scientific modeling and robustness](/writing/bayesian-foundations/)
 - [Arriving to MCMC](/writing/arriving-to-mcmc/)
 
 ## Essays
