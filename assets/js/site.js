@@ -31,12 +31,24 @@ function convertSidenotes(md) {
 (async function () {
   const footer = document.getElementById("last-updated");
   if (!footer) return;
+  // Show when THIS page's markdown last changed, not the repo's last push:
+  // ask GitHub for the most recent commit touching the page's source file.
+  // (Drafts aren't in git, so their viewer just leaves the footer empty.)
+  let path = document.querySelector("article[data-md]")?.dataset.md || "";
+  if (!path) {
+    const f = new URLSearchParams(location.search).get("f") || "";
+    if (/^\/?(drafts|content)\/[\w./ -]+\.md$/.test(f)) path = f;
+  }
+  path = path.replace(/^\//, "");
+  if (!path) return;
   try {
     const res = await fetch(
-      "https://api.github.com/repos/ayushibatwara/ayushibatwara.github.io/commits?sha=main&per_page=1"
+      "https://api.github.com/repos/ayushibatwara/ayushibatwara.github.io/commits" +
+        `?sha=main&per_page=1&path=${encodeURIComponent(path)}`
     );
     if (!res.ok) return;
     const [latest] = await res.json();
+    if (!latest) return; // file has never been committed (e.g. a draft)
     const date = new Date(latest.commit.committer.date).toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
