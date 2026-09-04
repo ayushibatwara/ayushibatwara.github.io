@@ -1,9 +1,6 @@
-# Bayesian Foundations
+# Scientific modeling and robustness
 
-__[Gelman & Shalizi (2013)](https://www.alphaxiv.org/pdf/1006.3868)__
-* Kuhn vs Popper
-
-__[Box (1980)](https://watermark02.silverchair.com/jrsssa_143_4_383.pdf?token=AQECAHi208BE49Ooan9kkhW_Ercy7Dm3ZL_9Cf3qfKAc485ysgAAAmcwggJjBgkqhkiG9w0BBwagggJUMIICUAIBADCCAkkGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM4rsLyIIdV0kNjE23AgEQgIICGj3MjKJr7ofDpmYI9lcdk3-PdcKlYCeCwzHp0RKh5PZmoNTsC0y_eq3Om-SUZzyZkM-cyg-FvhAoIg7tKNFFbsLVkLrAsthdFpw1Tr1uRIdl_1lt1v-6PFa-HLRbFO-3i7xZGYd0GI5750-QzNzgGd7B4Em8-W0x-Mvi0T7t4EN7spZtwsFp77wsuuRBUA-m3TZsOYzr5DwlZRvLnj2Ucn3EScrZgp-huExzzWI-lvPHL0JqJCwDNLZBXsHaZGLNwvAaQULOYOy81qBhu-zSGO_Ztk9pHqltYPhUX6qTNhFlUmkaTJHa1ymyGQoclpeNdE1BBwv1OJTRtVETI4xY3eHVBqJ0NztfKKcOBatIJ-ZCjxiz5U3BPOsbxzo6THBpLHt4jm8kCMw5HBZQNAPDJGnMLqvsyvYy-BnQHWYdaDz1GPavo_SFrMYDWRavhY0uXqx38qvqjcPHk7KgiqepamdH0mSN3b3LjibPilEbDQJ46SUAV_KZDpKyFqbbev48Ztgue2u3XxBlcOkHE1EUHUlhwucBiQxQZu8liElsj0cXa5ofJ6_vbPSwVBBuwifmiRc2qdLQC7_49RJKpHZhObgmon1jYoY63HjvXf7aPQnPhpgBGq5UNPHJSWt8TaS3mDzbm65WzTYbMzjKuqKave2n-lTz99YK9i35LlfSV8SlnmN-vdWoT2JzZNKPHLlxsbVeornGFOBujXE)__^[I also found the [discussion](https://rss.onlinelibrary.wiley.com/doi/epdf/10.1111/j.2397-2327.1980.tb04199.x) of his paper to be quite interesting. One of the points is about Box's emphasis on looking for "robust samples" rather than "robust procedures" and how non-robust samples have an effect on the inference drawn upon it.]
+These notes are based on __[Box (1980)](https://academic.oup.com/jrsssa/article/143/4/383/7105478)__^[I also found the [discussion](https://rss.onlinelibrary.wiley.com/doi/epdf/10.1111/j.2397-2327.1980.tb04199.x) of his paper to be quite interesting. One of the points is about Box's emphasis on looking for "robust samples" rather than "robust procedures" and how non-robust samples have an effect on the inference drawn upon it.].
 
 "No statistical model can safely be assumed adequate". 
 

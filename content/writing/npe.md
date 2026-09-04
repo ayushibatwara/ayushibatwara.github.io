@@ -1,4 +1,4 @@
-# Neural Posterior Estimation
+# Neural posterior estimation
 
 ## The posterior problem
 
