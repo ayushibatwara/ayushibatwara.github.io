@@ -126,15 +126,15 @@ We break up the transition to two steps: proposal and acceptance. We define $q$ 
 Then, we have:
 $$p(x | y) = q(x | y) A(y, x) $$
 
-Inserting this into detailed balance equations:
+Inserting this into detailed balance equation:
 $$
-A(y, x) / A(x, y) = p(y) / p(x) g(x | y) / g(y | x)
+A(y, x) / A(x, y) = p(y) / p(x) q(x | y) / q(y | x)
 $$
 
 Finally, we choose an acceptance ratio that fulfills the condition above. The Metropolis choice is:
 
 $$
-A(y, x) = min ( 1, p(y) / p(x) g(x | y) / g(y | x))
+A(y, x) = min ( 1, p(y) / p(x) q(x | y) / q(y | x))
 $$
 
 One of $A(y, x)$ and $A(x, y)$ will be 1, so the condition is satisfied.
@@ -150,3 +150,5 @@ $$X^(t+1) = cases(
 $$
 
 The choice of $q$ is flexible, but the choice affects its ability to converge to the target density $p$. 
+
+<!-- Good resource: https://blog.djnavarro.net/posts/2023-04-12_metropolis-hastings/ --!>
