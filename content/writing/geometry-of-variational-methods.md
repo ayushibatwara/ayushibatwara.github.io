@@ -15,16 +15,15 @@ Let's say we're interested in finding the convex conjugate for $f(x) = x^2$. Int
 
 ```typst
 #import "@preview/lilaq:0.4.0" as lq
-#let xs = lq.linspace(-2.4, 2.4, num: 120)
+#let xs = lq.linspace(-2.6, 4.6, num: 200)
 #lq.diagram(
-  width: 330pt, height: 220pt, xlim: (-2.6, 2.6), ylim: (-2.2, 4),
-  xlabel: $x$, legend: (position: top + center),
+  width: 330pt, height: 220pt, xlim: (-2.6, 4.6), ylim: (-2.6, 4),
+  xlabel: $x$, grid: (stroke: 0.5pt + luma(229)),
   // one tangent line per slope y: the affine map x -> y x - f*(y), f*(y) = y^2/4
   ..(-3, -2, -1, 0, 1, 2, 3).map(y =>
     lq.plot(xs, xs.map(x => y*x - y*y/4), mark: none, stroke: 0.6pt, color: gray)
   ),
   lq.plot(xs, xs.map(x => x * x), mark: none, color: red, stroke: 1.4pt),
-  lq.plot((), (), mark: none, color: gray,),
 )
 ```
 The slope of the tangent line is $f'(x)$, so to find the y-intercept, we solve $f(x) = f'(x) * x + b$ to get $b = f(x) + f'(x) * x$. By convention^[Unfortunately, I've only seen solving for the negative y-intercept in the literature.], we find the negative y-intercept with the convex conjugate: $- b = f'(x)*x - f(x) = f^*(f'(x))$. Instead of defining the function as $(x, y)$ pairs, we can now define it as $(m, b)$ pairs, where $m$ is the slope and $b$ is the y-intercept. 
@@ -41,13 +40,19 @@ $$
 f^*(3) = 3 * 1.5 - 1.5^2
 $$]. Therefore, the tangent line is $y = 3x - 2.25$.
 
+More generally, we can find $$
+f^* (y) &= max_x ( y x - x^2) \ 
+&= y * y/2 - (y/2)^2 
+&= y^2 / 4
+$$
 
 ```typst
 #import "@preview/lilaq:0.4.0" as lq
-#let xs = lq.linspace(-2.2, 4.2, num: 160)
+#let xs = lq.linspace(-2.6, 4.6, num: 200)
 #lq.diagram(
-  width: 330pt, height: 210pt, xlim: (-2.5, 4.5), ylim: (-2.6, 4),
+  width: 330pt, height: 220pt, xlim: (-2.6, 4.6), ylim: (-2.6, 4),
   xlabel: $x$, legend: (position: bottom + right),
+  grid: (stroke: 0.5pt + luma(229)),
   lq.plot(xs, xs.map(x => x * x), mark: none, color: red, stroke: 1.2pt, label: $f(x) = x^2$),
   lq.plot(xs, xs.map(x => 3*x - x*x), mark: none, color: blue, stroke: 1.2pt, label: $y x - f(x)$),
   lq.plot(xs, xs.map(x => 3*x - 2.25), mark: none, color: green, stroke: 1.2pt, label: [tangent, slope $y$]),
@@ -56,25 +61,19 @@ $$]. Therefore, the tangent line is $y = 3x - 2.25$.
 )
 ```
 
-More generally, we can find $$
-f^* (y) &= max_x ( y x - x^2) \ 
-&= y * y/2 - (y/2)^2 \
-&= y^2 / 4
-$$
-
 ## Conjugates as bounds
 
 The definition of the convex conjugate yields one of the most useful bounds in optimization. Consider the logistic function:
 ```typst
 #import "@preview/lilaq:0.4.0" as lq
-#let xs = lq.linspace(-6, 6, num: 150)
+#let xs = lq.linspace(-3.4, 3.4, num: 150)
 #lq.diagram(
-  width: 330pt, height: 190pt, xlim: (-6.5, 6.5), ylim: (-0.1, 1.1),
-  xlabel: $x$, ylabel: $sigma(x)$,
+  width: 330pt, height: 220pt, xlim: (-3.4, 3.4), ylim: (-0.2, 1.8),
+  xlabel: $x$, ylabel: $sigma(x)$, grid: (stroke: 0.5pt + luma(229)),
   lq.plot(xs, xs.map(x => 1 / (1 + calc.exp(-x))), mark: none, color: red, stroke: 1.2pt,
     label: $sigma(x) = 1 / (1 + e^(-x))$),
-  lq.plot((-6.5, 6.5), (0.5, 0.5), mark: none, stroke: (paint: gray, thickness: 0.6pt, dash: "dashed")),
-  lq.plot((-6.5, 6.5), (1, 1), mark: none, stroke: (paint: gray, thickness: 0.6pt, dash: "dashed")),
+  lq.plot((-3.4, 3.4), (0.5, 0.5), mark: none, stroke: (paint: gray, thickness: 0.6pt, dash: "dashed")),
+  lq.plot((-3.4, 3.4), (1, 1), mark: none, stroke: (paint: gray, thickness: 0.6pt, dash: "dashed")),
 )
 ```
 
@@ -138,15 +137,21 @@ In the concave case, the concave conjugate gives us a family of upper bounds. Be
 #lq.diagram(
   width: 330pt, height: 220pt, xlim: (-3.4, 3.4), ylim: (-0.2, 1.8),
   xlabel: $x$, legend: (position: top + left),
+  grid: (stroke: 0.5pt + luma(229)),
   ..(0.2, 0.4, 0.6, 0.8).map(e =>
     lq.plot(xs, xs.map(x => calc.exp(e * x - H(e))), mark: none,
-      stroke: (paint: gray, thickness: 0.7pt, dash: "dashed"))
+      stroke: (paint: gray, thickness: 0.7pt))
   ),
   lq.plot(xs, xs.map(x => 1 / (1 + calc.exp(-x))), mark: none, color: red, stroke: 1.3pt,
     label: $sigma(x)$),
-  lq.plot((), (), mark: none, stroke: (paint: gray, dash: "dashed"),
+  lq.plot((), (), mark: none, stroke: (paint: gray),
     label: $e^(y x - H(y))$),
 )
 ```
 
 Conjugates give us an interesting tool to find affine bounds for our functions of interest. Like we showed above, we have the flexibility to use more general bounds by transforming the argument of the function of interest rather than the value of the function. 
+
+
+## Bayesian networks as graphical models
+
+
