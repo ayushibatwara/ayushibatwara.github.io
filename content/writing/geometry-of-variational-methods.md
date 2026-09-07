@@ -151,7 +151,12 @@ In the concave case, the concave conjugate gives us a family of upper bounds. Be
 
 Conjugates give us an interesting tool to find affine bounds for our functions of interest. Like we showed above, we have the flexibility to use more general bounds by transforming the argument of the function of interest rather than the value of the function. 
 
+<!-- ## Graphical models
 
-## Bayesian networks as graphical models
+Let $H$ represent the set of "hidden" or "unobserved" nodes, and let $E$ represent the set of evidence nodes. Probabilistic inference in graphical models is concerned with computing the conditional probability distribution over the values of the hidden nodes given values of the evidence nodes. Formally, we wish to calculate $P(H|E)$:
+$$
+P(H|E) = P(H, E) / P(E)
+$$
 
-
+Consider the following Bayesian network:
+--!>
