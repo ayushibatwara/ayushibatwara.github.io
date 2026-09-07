@@ -11,5 +11,5 @@ Some of my favorites:
 
 Other reads:
 - *The Vegetarian* by Han Kang
-- *Why Fish Don't Exist* by Lulu Miller
+- *Why Fish Don't Exist* by Lulu Miller^[This was recommended by a friend who attended Stanford. Notably, the book is about the founding president of Stanford.]
 - *How to Win Friends & Influence People* by Dale Carnegie
