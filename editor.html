@@ -70,6 +70,35 @@
       font: 14px/1.6 ui-monospace, "SF Mono", Menlo, monospace;
       color: #222;
     }
+    #file-tree {
+      flex: 0 0 190px;
+      overflow-y: auto;
+      border-right: 1px solid #e5e5e5;
+      padding: 1rem 0.8rem 2rem;
+      font-size: 1.05rem;
+    }
+    #file-tree h4 {
+      margin: 1.1rem 0 0.3rem;
+      font-weight: 400;
+      font-variant: small-caps;
+      letter-spacing: 0.12em;
+      color: #9a9a9a;
+      font-size: 0.95rem;
+    }
+    #file-tree h4:first-child { margin-top: 0; }
+    #file-tree a {
+      display: block;
+      padding: 0.18rem 0.5rem;
+      border-radius: 3px;
+      color: #444;
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    #file-tree a:hover { color: var(--accent); }
+    #file-tree a.active { color: var(--accent); background: #eef2f7; }
+    .editor-split.tree-hidden #file-tree { display: none; }
     .pane-divider {
       flex: 0 0 6px;
       cursor: col-resize;
@@ -101,6 +130,7 @@
     <code>http://localhost:8000/editor.html</code>.
   </div>
   <div class="editor-bar" id="editor-bar">
+    <button id="tree-toggle" title="toggle the file tree">☰</button>
     <select id="file-select"></select>
     <button id="new-draft">new draft</button>
     <input id="draft-name" placeholder="draft name, then Enter" style="display:none">
@@ -115,6 +145,7 @@
     <a id="page-link" href="/" target="_blank">open page ↗</a>
   </div>
   <div class="editor-split" id="editor-split">
+    <nav id="file-tree"></nav>
     <textarea id="editor-text" spellcheck="true" placeholder="Write markdown here…"></textarea>
     <div class="pane-divider" id="pane-divider" title="drag to resize, double-click to reset"></div>
     <div class="pane-preview"><article id="preview"></article></div>
