@@ -151,12 +151,19 @@ In the concave case, the concave conjugate gives us a family of upper bounds. Be
 
 Conjugates give us an interesting tool to find affine bounds for our functions of interest. Like we showed above, we have the flexibility to use more general bounds by transforming the argument of the function of interest rather than the value of the function. 
 
-<!-- ## Graphical models
+<!--
 
-Let $H$ represent the set of "hidden" or "unobserved" nodes, and let $E$ represent the set of evidence nodes. Probabilistic inference in graphical models is concerned with computing the conditional probability distribution over the values of the hidden nodes given values of the evidence nodes. Formally, we wish to calculate $P(H|E)$:
-$$
-P(H|E) = P(H, E) / P(E)
-$$
+## Deriving the ELBO
+TODO:
+* First show that we're interested in calculating the posterior
+* To calculate posterior, we need the prior
+* Prior requires integration over latent variable(s), which could be intractable
+* Solution is to use ELBO
 
-Consider the following Bayesian network:
+* Mathematically derive ELBO by showing the Fenchel conjugate for negative entropy function
+* Do some tricks and show integrating over latent removes some of the terms
+* Give rise to the Fenchel inequality
+* This is ELBO
+* Relate it to KL-Divergence by using Bayes in ELBO 
+* Arg max ELBO = arg min KL
 --!>
