@@ -1,7 +1,14 @@
 # Quotes
 
 ```typst
-#quote(block: true, attribution: [Philip E. Tetlock \ Superforecasting])[
+#quote(block: true, attribution: [Adam Draper \ _Breakfast with Pops_])[
+  This was a doorway to an opportunity with unknown upside, and instead of acting fearfully, he went for it. The luckiest people just go for it.
+]
+```
+I had a conversation with a friend about decisiveness to a fault. In my opinion, decision is always better than indecision. Decision buys you experience while indecision costs you time. Sure, you might make a bad decision that also costs you time, but at least now, you can make a Bayesian update!
+
+```typst
+#quote(block: true, attribution: [Philip E. Tetlock \ _Superforecasting_])[
   So finding meaning in events is positively correlated with well-being but negatively correlated with foresight. That sets up a depressing possibility: Is misery the price of accuracy?
 ]
 ```
