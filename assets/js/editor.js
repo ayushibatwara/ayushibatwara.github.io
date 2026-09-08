@@ -67,6 +67,7 @@
     setStatus("saved");
     updatePromote();
     updateDelete();
+    updateRename();
     markTreeActive();
     render();
   }
@@ -193,6 +194,51 @@
       body: JSON.stringify({ path: file, text: `# ${name}\n\n` }),
     });
     await loadList(file);
+  });
+
+  // "rename": changes the open file's slug — drafts and writing pieces only.
+  // The server moves the piece's page and updates the Writing list to match.
+  const renameBtn = document.getElementById("rename-btn");
+  const renameInput = document.getElementById("rename-name");
+
+  function updateRename() {
+    const renamable = !!current && /^(drafts|content\/writing)\/[\w-]+\.md$/.test(current);
+    renameBtn.style.display = renamable ? "" : "none";
+    renameInput.style.display = "none";
+  }
+
+  renameBtn.addEventListener("click", () => {
+    renameInput.value = current.replace(/^.*\//, "").replace(/\.md$/, "");
+    renameInput.style.display = "inline-block";
+    renameInput.focus();
+    renameInput.select();
+  });
+
+  renameInput.addEventListener("keydown", async (e) => {
+    if (e.key === "Escape") {
+      renameInput.style.display = "none";
+      return;
+    }
+    if (e.key !== "Enter") return;
+    const name = renameInput.value.trim().toLowerCase().replace(/[^\w-]+/g, "-").replace(/^-+|-+$/g, "");
+    if (!name) return;
+    renameInput.style.display = "none";
+    await save();
+    setStatus("renaming…");
+    try {
+      const res = await fetch("/api/rename", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ path: current, name }),
+      });
+      const out = await res.json();
+      if (!out.ok) throw new Error(out.error || "rename failed");
+      await loadList(out.file);
+      setStatus("renamed ✓");
+    } catch (err) {
+      setStatus("RENAME FAILED — see console");
+      console.error(err);
+    }
   });
 
   // "delete": removes the open file — drafts and writing pieces only, never

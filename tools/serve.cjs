@@ -8,6 +8,8 @@
 //                               scaffolds its page, lists it on the Writing page
 //   POST /api/delete         -> { path }  deletes a draft or a writing piece (with its
 //                               page + Writing-list entry); top-level pages are refused
+//   POST /api/rename         -> { path, name }  renames a draft or writing piece slug,
+//                               moving its page and updating the Writing list to match
 // Only *.md files under content/ and drafts/ are readable/writable.
 // Binds to 127.0.0.1 — never exposed beyond this machine.
 
@@ -209,6 +211,58 @@ const server = http.createServer((req, res) => {
         fs.writeFileSync(listPath, kept.join("\n"));
       }
       renderMath(() => json(res, 200, { ok: true }));
+    });
+    return;
+  }
+
+  if (url.pathname === "/api/rename" && req.method === "POST") {
+    let body = "";
+    req.on("data", (c) => (body += c));
+    req.on("end", () => {
+      let payload;
+      try {
+        payload = JSON.parse(body);
+      } catch {
+        return json(res, 400, { error: "bad json" });
+      }
+      const p = typeof payload.path === "string" ? payload.path : "";
+      const m = p.match(/^(drafts|content\/writing)\/([\w-]+)\.md$/);
+      if (!m) return json(res, 400, { error: "only drafts and writing pieces can be renamed" });
+      const slug = typeof payload.name === "string" ? payload.name.trim() : "";
+      if (!/^[\w-]+$/.test(slug))
+        return json(res, 400, { error: "name must be a simple slug (letters, digits, - and _)" });
+      const [, dir, oldSlug] = m;
+      if (slug === oldSlug) return json(res, 200, { ok: true, file: p });
+      const abs = path.join(root, p);
+      const newRel = `${dir}/${slug}.md`;
+      const newAbs = path.join(root, newRel);
+      if (!fs.existsSync(abs)) return json(res, 404, { error: "not found" });
+      if (fs.existsSync(newAbs)) return json(res, 409, { error: `${newRel} already exists` });
+      fs.renameSync(abs, newAbs);
+      if (dir === "content/writing") {
+        // move the piece's page and point it at the renamed markdown
+        const oldPage = path.join(root, "writing", oldSlug);
+        const newPage = path.join(root, "writing", slug);
+        if (fs.existsSync(oldPage) && !fs.existsSync(newPage)) {
+          fs.renameSync(oldPage, newPage);
+          const idx = path.join(newPage, "index.html");
+          if (fs.existsSync(idx)) {
+            fs.writeFileSync(
+              idx,
+              fs
+                .readFileSync(idx, "utf8")
+                .replaceAll(`/content/writing/${oldSlug}.md`, `/content/writing/${slug}.md`)
+            );
+          }
+        }
+        // update the piece's link on the Writing page
+        const listPath = path.join(root, "content/writing.md");
+        fs.writeFileSync(
+          listPath,
+          fs.readFileSync(listPath, "utf8").replaceAll(`](/writing/${oldSlug}/)`, `](/writing/${slug}/)`)
+        );
+      }
+      json(res, 200, { ok: true, file: newRel });
     });
     return;
   }
