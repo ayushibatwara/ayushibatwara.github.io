@@ -67,6 +67,7 @@
     setStatus("saved");
     updatePromote();
     updateDelete();
+    markTreeActive();
     render();
   }
 
@@ -79,9 +80,59 @@
       opt.textContent = f.replace(/^content\//, "").replace(/\.md$/, "").replace(/^drafts\//, "draft: ");
       select.appendChild(opt);
     }
+    renderTree(files);
     const wanted = selectFile || new URLSearchParams(location.search).get("f");
     await openFile(wanted && files.includes(wanted) ? wanted : files[0]);
   }
+
+  // GitBook-style sidebar: the doc lineage (pages -> writing -> drafts),
+  // click to open, current file highlighted. The ☰ button collapses it.
+  const tree = document.getElementById("file-tree");
+  const treeToggle = document.getElementById("tree-toggle");
+  const splitEl = document.getElementById("editor-split");
+  const TREE_KEY = "editor-tree-hidden";
+
+  function renderTree(files) {
+    const groups = [
+      { label: "pages", match: (f) => /^content\/[^/]+\.md$/.test(f) },
+      { label: "writing", match: (f) => f.startsWith("content/writing/") },
+      { label: "drafts", match: (f) => f.startsWith("drafts/") },
+    ];
+    tree.innerHTML = "";
+    for (const g of groups) {
+      const members = files.filter(g.match);
+      if (!members.length) continue;
+      const h = document.createElement("h4");
+      h.textContent = g.label;
+      tree.appendChild(h);
+      for (const f of members) {
+        const a = document.createElement("a");
+        a.textContent = f
+          .replace(/^(content\/writing\/|content\/|drafts\/)/, "")
+          .replace(/\.md$/, "");
+        a.dataset.file = f;
+        a.addEventListener("click", () => openFile(f));
+        tree.appendChild(a);
+      }
+    }
+    markTreeActive();
+  }
+
+  function markTreeActive() {
+    tree
+      .querySelectorAll("a")
+      .forEach((a) => a.classList.toggle("active", a.dataset.file === current));
+  }
+
+  try {
+    splitEl.classList.toggle("tree-hidden", localStorage.getItem(TREE_KEY) === "1");
+  } catch {}
+  treeToggle.addEventListener("click", () => {
+    const hidden = splitEl.classList.toggle("tree-hidden");
+    try {
+      localStorage.setItem(TREE_KEY, hidden ? "1" : "0");
+    } catch {}
+  });
 
   textarea.addEventListener("input", () => {
     dirty = true;

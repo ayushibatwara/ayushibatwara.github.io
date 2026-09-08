@@ -10,6 +10,7 @@ Some of my favorites:
 - *The Boys in the Boat* by Daniel James Brown^[This was a book recommended by Ali Ghodsi, CEO of Databricks.]
 
 Other reads:
-- *The Vegetarian* by Han Kang
+- *The Vegetarian* by Han Kang^[I thought this book would read very "vegetarian-friendly". Alas, I was wrong.]
 - *Why Fish Don't Exist* by Lulu Miller^[This was recommended by a friend who attended Stanford. Notably, the book is about the founding president of Stanford.]
 - *How to Win Friends & Influence People* by Dale Carnegie
+- *Breakfast with Pops* by Adam Draper
