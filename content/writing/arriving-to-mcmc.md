@@ -139,7 +139,7 @@ $$
 
 One of $A(y, x)$ and $A(x, y)$ will be 1, so the condition is satisfied.
 
-Succinctly, the Metropolis-Hastings algorithm associated with a target density $pi$ requires the choice of an easier proposal density $q$ (aka candidate kernel). Given $X^(t) = x^((t))$ and $pi(x) prop tilde(pi)(x)$^[Assuming the target distribution can only be computed up to a multiplying constant.], 
+Succinctly, the Metropolis-Hastings algorithm associated with a target density $pi$ requires the choice of an easier proposal density $q$ (aka candidate kernel). Given $X^(t) = x^((t))$ and $pi(x) prop tilde(pi)(x)$^[Assuming the target distribution can only be computed up to a multiplying constant. We only need the unnormalized target density.], 
 1. Generate $Y_t ~ q(y|x^((t)))$
 2. Take 
 $$X^(t+1) = cases(
