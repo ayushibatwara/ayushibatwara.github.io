@@ -60,6 +60,112 @@ function convertSidenotes(md) {
   }
 })();
 
+// ---- Writing index: title + teaser + date/reading-time cards ----
+
+// Markdown -> readable prose: drop fences, display math, and footnotes;
+// unwrap inline math and links. Used for teasers and word counts.
+function pieceText(md) {
+  return md
+    .replace(/```[\s\S]*?```|~~~[\s\S]*?~~~/g, "\n\n")
+    .replace(/\^\[(?:[^\[\]]|\[[^\]]*\])*\]/g, "")
+    .replace(/\$\$[\s\S]*?\$\$/g, "\n\n")
+    .replace(/\$([^$\n]+?)\$/g, "$1")
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1");
+}
+
+function pieceTeaser(md) {
+  const blocks = pieceText(md).split(/\n\s*\n/);
+  const para =
+    blocks.find((b) => {
+      const t = b.trim();
+      return t && !/^#|^[-*]\s|^\d+\.\s|^>|^_|^\|/.test(t);
+    }) || "";
+  const clean = para.replace(/[*_]{1,2}/g, "").replace(/\s+/g, " ").trim();
+  return clean.length > 220 ? clean.slice(0, 220).replace(/\s+\S*$/, "") + "…" : clean;
+}
+
+function readingMinutes(md) {
+  return Math.max(1, Math.round(pieceText(md).split(/\s+/).filter(Boolean).length / 200));
+}
+
+// Last-commit date for a file, cached per session to spare the API.
+async function lastEdited(path) {
+  const key = `edited:${path}`;
+  try {
+    const cached = sessionStorage.getItem(key);
+    if (cached !== null) return cached;
+  } catch {}
+  let date = "";
+  try {
+    const res = await fetch(
+      "https://api.github.com/repos/ayushibatwara/ayushibatwara.github.io/commits" +
+        `?sha=main&per_page=1&path=${encodeURIComponent(path)}`
+    );
+    if (res.ok) {
+      const [latest] = await res.json();
+      if (latest)
+        date = new Date(latest.commit.committer.date).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+    }
+  } catch {}
+  try {
+    sessionStorage.setItem(key, date);
+  } catch {}
+  return date;
+}
+
+async function renderWritingIndex(article, md) {
+  article.innerHTML = "";
+  const cards = [];
+  for (const line of md.split("\n")) {
+    const link = line.match(/^(?:-\s+)?\[([^\]]+)\]\((\/writing\/([\w-]+)\/)\)\s*$/);
+    if (link) {
+      const card = document.createElement("div");
+      card.className = "piece-card";
+      const a = document.createElement("a");
+      a.className = "piece-title";
+      a.href = link[2];
+      a.textContent = link[1];
+      const teaser = document.createElement("p");
+      teaser.className = "piece-teaser";
+      const meta = document.createElement("p");
+      meta.className = "piece-meta";
+      card.append(a, teaser, meta);
+      article.appendChild(card);
+      cards.push({ slug: link[3], teaser, meta });
+    } else if (/^#\s/.test(line)) {
+      const h = document.createElement("h1");
+      h.textContent = line.slice(2);
+      article.appendChild(h);
+    } else if (/^##\s/.test(line)) {
+      const h = document.createElement("h2");
+      h.textContent = line.slice(3);
+      article.appendChild(h);
+    } else if (line.trim()) {
+      const div = document.createElement("div");
+      div.innerHTML = marked.parse(line);
+      while (div.firstChild) article.appendChild(div.firstChild);
+    }
+  }
+  await Promise.all(
+    cards.map(async (c) => {
+      try {
+        const piece = await (await fetch(`/content/writing/${c.slug}.md`)).text();
+        c.teaser.textContent = pieceTeaser(piece);
+        const minutes = `${readingMinutes(piece)} min read`;
+        c.meta.textContent = minutes;
+        lastEdited(`content/writing/${c.slug}.md`).then((d) => {
+          if (d) c.meta.textContent = `${d} · ${minutes}`;
+        });
+      } catch {}
+    })
+  );
+}
+
 // Place each sidenote in the right margin, level with its number, nudging
 // notes down as needed so they never overlap.
 function layoutSidenotes(article) {
@@ -104,6 +210,10 @@ function layoutSidenotes(article) {
     const res = await fetch(src);
     if (!res.ok) throw new Error(`${res.status} fetching ${src}`);
     const md = await res.text();
+    if (src === "/content/writing.md") {
+      await renderWritingIndex(article, md);
+      return;
+    }
     article.innerHTML = marked.parse(
       convertSidenotes(convertHighlights(TypstMath.transformMath(md).text))
     );

@@ -76,7 +76,8 @@ article > h1,
 article > h2,
 article > h3,
 article > blockquote,
-article > hr {
+article > hr,
+article > .piece-card {
   width: 60%;
 }
 
@@ -123,6 +124,36 @@ ul, ol {
 
 li {
   margin: 0.5rem 0;
+}
+
+/* ---- Writing index cards (see renderWritingIndex in site.js) ---- */
+
+.piece-card {
+  margin: 2.4rem 0;
+}
+
+.piece-card .piece-title {
+  font-size: 1.75rem;
+  text-decoration: none;
+}
+
+.piece-card .piece-title:hover {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
+}
+
+.piece-card .piece-teaser {
+  margin: 0.45rem 0 0.35rem;
+  color: #555;
+}
+
+.piece-card .piece-meta {
+  margin: 0;
+  font-size: 1rem;
+  font-style: italic;
+  color: #9a9a9a;
 }
 
 /* ==highlighted text== (see convertHighlights in site.js) */
@@ -278,7 +309,8 @@ img.math-typst {
   article > h2,
   article > h3,
   article > blockquote,
-  article > hr {
+  article > hr,
+  article > .piece-card {
     width: 100%;
   }
 
