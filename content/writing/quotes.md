@@ -1,5 +1,7 @@
 # Quotes
 
+Quotes that left me pondering.
+
 ```typst
 #quote(block: true, attribution: [Adam Draper \ September 7, 2026 ·  _Breakfast with Pops_])[
   This was a doorway to an opportunity with unknown upside, and instead of acting fearfully, he went for it. The luckiest people just go for it.

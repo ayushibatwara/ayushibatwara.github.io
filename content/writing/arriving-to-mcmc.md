@@ -1,5 +1,7 @@
 # Arriving to MCMC
 
+Understanding the acceptance and proposal trick in modeling distributions using Markov chain Monte Carlo.
+
 ### Priming on Markov Chains^[I'm omitting the proofs since the point of this primer is to refresh definitions and theorems.]
 
 __Markov chain__:

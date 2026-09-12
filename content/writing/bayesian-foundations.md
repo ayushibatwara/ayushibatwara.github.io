@@ -1,8 +1,6 @@
 # Scientific modeling and robustness
 
-These notes are based on __[Box (1980)](https://academic.oup.com/jrsssa/article/143/4/383/7105478)__^[I also found the [discussion](https://rss.onlinelibrary.wiley.com/doi/epdf/10.1111/j.2397-2327.1980.tb04199.x) of his paper to be quite interesting. One of the points is about Box's emphasis on looking for "robust samples" rather than "robust procedures" and how non-robust samples have an effect on the inference drawn upon it.].
-
-"No statistical model can safely be assumed adequate". 
+"No statistical model can safely be assumed adequate". These notes are based on __[Box (1980)](https://academic.oup.com/jrsssa/article/143/4/383/7105478)__^[I also found the [discussion](https://rss.onlinelibrary.wiley.com/doi/epdf/10.1111/j.2397-2327.1980.tb04199.x) of his paper to be quite interesting. One of the points is about Box's emphasis on looking for "robust samples" rather than "robust procedures" and how non-robust samples have an effect on the inference drawn upon it.].
 
 There is a constant interplay between induction and deduction in building statistical models. Observed data is used to suggest a tentative model (induction), and this results in acquiring more data, analyzing it, and then making updates to the model (deduction). In this way, the model is constantly evolving. 
 
