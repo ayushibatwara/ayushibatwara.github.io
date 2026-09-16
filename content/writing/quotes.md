@@ -4,15 +4,23 @@ Quotes that left me pondering.
 
 ```typst
 #quote(block: true, attribution: [Lynda Rutledge \ September 12, 2026 ·  _West with Giraffes_])[
-  Sucking wind, I stared after the shrinking rig, realizing, like a stab to the heart, I was about to say goodbye to my California plan. _It's over,_ I told myself, thinking how I'd sell my soul for it not to be–and considering I hadn't yet quite become acquainted with my soul, that was a surprising thought. So, fueled by the same do-or-die fury I'd felt on the dock, I started running, thinking I might as well die from the running than the standing and watching my flickering hope fade.
+  "Home's not the place you're from, Woody. Home's the place you want to be."
 ]
 ```
 
+
+```typst
+#quote(block: true, attribution: [Lynda Rutledge \ September 12, 2026 ·  _West with Giraffes_])[
+  Sucking wind, I stared after the shrinking rig, realizing, like a stab to the heart, I was about to say goodbye to my California plan. _It's over,_ I told myself, thinking how I'd sell my soul for it not to be–and considering I hadn't yet quite become acquainted with my soul, that was a surprising thought. So, fueled by the same do-or-die fury I'd felt on the dock, I started running, thinking I might as well die from the running than the standing and watching my flickering hope fade.
+]
+```
+<!--
 ```typst
 #quote(block: true, attribution: [Lynda Rutledge \ September 12, 2026 ·  _West with Giraffes_])[
   Yet I couldn't shake the longing for millk and honey the Californy-bound giraffes had given me, and I felt my flickering hope turn flaming do-or-die. That's what the tiniest speck of hope did to you back then. Got you making plans and dreaming dreams in the face of a fool's folly that hung on a couple of giraffes. You clutched it, nursed it, kept it safe and warm, because that was the only difference between you and the vacant-eyed joes aimlessly walking, dead before their time.
 ]
 ```
+--!>
 Hope for a better future gives purpose, and purpose is what moves us forward. 
 
 ```typst

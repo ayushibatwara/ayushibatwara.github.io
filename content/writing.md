@@ -1,5 +1,7 @@
 # Writing
 
+[Quotes](/writing/quotes/)
+
 [Geometry of Variational Methods](/writing/geometry-of-variational-methods/)
 
 [Neural posterior estimation](/writing/npe/)
@@ -8,6 +10,5 @@
 
 [Arriving to MCMC](/writing/arriving-to-mcmc/)
 
-[Quotes](/writing/quotes/)
 
 

@@ -19,5 +19,5 @@ At a high level, this is how it works:
 4. Feed the observed data $x_o$ to the neural density network to get the approximated posterior distribution $p(theta|x_o)$
 
 ## Neural density network
-We refer to the inference network as $q_phi.alt (theta|x)$, where $theta$ are the parameters of the neural network. We train the network by minimizing the cross-entropy loss^[Intuitively, the cross-entropy loss measures the total average surprise when you use $q_phi.alt$ to navigate the true landscape $p$. ] between the true posterior and the approximated posterior: $$cal(L) (phi.alt) = bb(E)_((theta, x) ~ p(theta, x)) [-log q_phi.alt (theta|x)]$$
+We refer to the inference network as $q_phi.alt (theta|x)$, where $phi.alt$ are the parameters of the neural network. We train the network by minimizing the cross-entropy loss^[Intuitively, the cross-entropy loss measures the total average surprise when you use $q_phi.alt$ to navigate the true landscape $p$. ] between the true posterior and the approximated posterior: $$cal(L) (phi.alt) = bb(E)_((theta, x) ~ p(theta, x)) [-log q_phi.alt (theta|x)]$$
 
