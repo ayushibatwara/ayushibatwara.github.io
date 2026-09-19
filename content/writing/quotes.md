@@ -20,7 +20,7 @@ Quotes that left me pondering.
   Yet I couldn't shake the longing for millk and honey the Californy-bound giraffes had given me, and I felt my flickering hope turn flaming do-or-die. That's what the tiniest speck of hope did to you back then. Got you making plans and dreaming dreams in the face of a fool's folly that hung on a couple of giraffes. You clutched it, nursed it, kept it safe and warm, because that was the only difference between you and the vacant-eyed joes aimlessly walking, dead before their time.
 ]
 ```
---!>
+-->
 Hope for a better future gives purpose, and purpose is what moves us forward. 
 
 ```typst
@@ -44,8 +44,11 @@ It's reminiscent of the proverbial, "ignorance is bliss".
 ```
 
 Carlini argued that there are three possibilities for the future of research with the current world being a combination of all three simultaneously: 
+
 1. Humans as researchers 
+
 2. Models as research assistants
+
 3. Models as researchers
 
 I think the real world today operates at 2.25, where humans are still responsible for steering these "super smart buddies" towards pursuing economically productive ideas.
