@@ -21,7 +21,10 @@
 
   // Also escapes [ and ]: the alt text lands in the markdown before the
   // ^[...] sidenote pass runs, and literal brackets from math content would
-  // derail that regex mid-tag. Entities decode back to brackets in the DOM.
+  // derail that regex mid-tag. Newlines become entities too: a raw newline
+  // inside the attribute would split the tag across lines and make marked
+  // treat everything around it as one raw HTML block, flattening the
+  // markdown that follows. Entities decode back in the DOM.
   function escapeHtml(s) {
     return s
       .replace(/&/g, "&amp;")
@@ -29,7 +32,8 @@
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;")
       .replace(/\[/g, "&#91;")
-      .replace(/\]/g, "&#93;");
+      .replace(/\]/g, "&#93;")
+      .replace(/\n/g, "&#10;");
   }
 
   function svgPath(hash) {
