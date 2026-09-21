@@ -4,7 +4,7 @@ Quotes that left me pondering.
 
 ```typst
 #quote(block: true, attribution: [Nikole Hannah-Jones \ September 20, 2026 ·  _In Fighting for Every Black Child, Did I Betray My Own?_])[
-Instead of fortifying our determination to fight for integration, we have instead chosen to succumb to a collective apathy in the face of a system so devastatingly unequal that it puts at odds trying to be a good person with trying to be a good parent.
+"Instead of fortifying our determination to fight for integration, we have instead chosen to succumb to a collective apathy in the face of a system so devastatingly unequal that it puts at odds trying to be a good person with trying to be a good parent."
 ]
 ```
 ```typst
