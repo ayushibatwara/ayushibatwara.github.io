@@ -3,6 +3,32 @@
 Quotes that left me pondering.
 
 ```typst
+#quote(block: true, attribution: [Nikole Hannah-Jones \ September 20, 2026 ·  _In Fighting for Every Black Child, Did I Betray My Own?_])[
+Instead of fortifying our determination to fight for integration, we have instead chosen to succumb to a collective apathy in the face of a system so devastatingly unequal that it puts at odds trying to be a good person with trying to be a good parent.
+]
+```
+```typst
+#quote(block: true, attribution: [Lynda Rutledge \ September 20, 2026 ·  _West with Giraffes_])[
+  "It's a strange thing how you can spend years with some folks and never know them, yet, with others, you only need a handful of days to know them far beyond years."
+]
+```
+
+
+```typst
+#quote(block: true, attribution: [Lynda Rutledge \ September 20, 2026 ·  _West with Giraffes_])[
+  "The thing about knowing you're doing something for the last time is that it takes the joy right out of it. I've done lots of things for the last time in my long life, but I didn't know it. This time I'd know it . . . I could barely abide the thought."
+]
+```
+
+
+```typst
+#quote(block: true, attribution: [Lynda Rutledge \ September 20, 2026 ·  _West with Giraffes_])[
+  "They can kill you dead on instinct alone and saunter into the next minute like it was nothing. But at least you know the ground rules with animals. You can count the cost of breaking the rules. You never know with people. Even the good can hurt you bad, and the bad, well they're going to hurt you but good."
+]
+```
+
+
+```typst
 #quote(block: true, attribution: [Lynda Rutledge \ September 12, 2026 ·  _West with Giraffes_])[
   "Home's not the place you're from, Woody. Home's the place you want to be."
 ]
