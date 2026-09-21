@@ -23,7 +23,7 @@ Quotes that left me pondering.
 
 ```typst
 #quote(block: true, attribution: [Lynda Rutledge \ September 20, 2026 ·  _West with Giraffes_])[
-  "They can kill you dead on instinct alone and saunter into the next minute like it was nothing. But at least you know the ground rules with animals. You can count the cost of breaking the rules. You never know with people. Even the good can hurt you bad, and the bad, well they're going to hurt you but good."
+  "They can kill you dead on instinct alone and saunter into the next minute like it was nothing. But at least you know the ground rules with animals. You can count the cost of breaking the rules. You never know with people. Even the good can hurt you bad, and the bad, well, they're going to hurt you but good."
 ]
 ```
 
