@@ -63,15 +63,8 @@
       return img;
     }
 
-    const protectedMd = md.replace(/\\\$/g, ESC);
-    const parts = protectedMd.split(/(```[\s\S]*?```|~~~[\s\S]*?~~~|`[^`\n]*`)/);
-    const out = parts.map((part, i) => {
-      if (i % 2 === 1) {
-        const typst = part.match(/^```typst\n([\s\S]*?)\n?```$/);
-        if (typst) return `\n\n${add("typst", typst[1])}\n\n`;
-        return part; // other code — leave alone
-      }
-      let t = part.replace(/\$\$([\s\S]+?)\$\$/g, (_, m) => `\n\n${add("display", m)}\n\n`);
+    function prose(t) {
+      t = t.replace(/\$\$([\s\S]+?)\$\$/g, (_, m) => `\n\n${add("display", m)}\n\n`);
       // inline math: $x$, $ x $, or $ x$ all work. The one shape rejected
       // is a space before the closing $ ONLY (e.g. "$5 and $10", where the
       // candidate content "5 and " is really currency, not math).
@@ -80,6 +73,26 @@
       t = t.replace(/\$(?!\s)([^$\n]+?)(?<!\s)\$/g, (_, m) => add("inline", m));
       t = t.replace(/\$[ \t]+([^$\n]+?)[ \t]*\$/g, (_, m) => add("inline", m));
       return t;
+    }
+
+    const protectedMd = md.replace(/\\\$/g, ESC);
+    const parts = protectedMd.split(/(```[\s\S]*?```|~~~[\s\S]*?~~~|`[^`\n]*`)/);
+    const out = parts.map((part, i) => {
+      if (i % 2 === 1) {
+        const typst = part.match(/^```typst\n([\s\S]*?)\n?```$/);
+        if (!typst) return part; // other code — leave alone
+        let html = add("typst", typst[1]);
+        // A ^[sidenote] written right after the closing fence moves inside
+        // the block's wrapper, so its number sits by the quote (see
+        // .typst-block in style.css) instead of in a paragraph of its own.
+        const note = parts[i + 1].match(/^\^\[(?:[^\[\]]|\[[^\]]*\])*\]/);
+        if (note) {
+          parts[i + 1] = parts[i + 1].slice(note[0].length);
+          html = html.replace(/<\/span>$/, `${prose(note[0])}</span>`);
+        }
+        return `\n\n${html}\n\n`;
+      }
+      return prose(part);
     });
     return { text: out.join("").replace(new RegExp(ESC, "g"), "\\$"), snippets };
   }
