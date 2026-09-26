@@ -256,12 +256,28 @@ img.math-display {
    width so they land 1:1; no equation number. */
 .typst-block {
   display: block;
+  margin: 2rem 0; /* on the block, not the image, so it collapses like before */
+  text-align: center;
+  line-height: 0; /* no strut: the block is exactly the image */
 }
 
 img.math-typst {
-  display: block;
-  margin: 2rem auto;
+  display: inline-block;
   max-width: 100%;
+}
+
+/* A sidenote on a typst block (math-common.js moves it inside the wrapper):
+   the number flows right after the image, zero-width so the image stays
+   centered, and is lifted from the image's bottom edge to its last line
+   (the attribution, for quotes) by the page's 5pt bottom margin. Not
+   position: absolute — .typst-block must stay unpositioned so the sidenote
+   itself is still laid out against the article. */
+.typst-block > .sidenote-number {
+  display: inline-block;
+  width: 0;
+  line-height: 1;
+  position: relative;
+  top: -5pt;
 }
 
 .math-block::after {
