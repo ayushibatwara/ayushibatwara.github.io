@@ -3,6 +3,7 @@
 <span class="newthought">I love coffee & books.</span> I enjoy reading narrative nonfiction and historical fiction. I often add quotes from what I read [here](/writing/quotes/).  
 
 Currently reading:
+- *The Selfish Gene* by Richard Dawkins
 - *Superforecasting* by Dan Gardner & Philip E. Tetlock
 - *Superintelligence: Paths, Dangers, Strategies* by Nick Bostrom
 
