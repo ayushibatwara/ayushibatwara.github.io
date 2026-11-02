@@ -1,6 +1,13 @@
 # Quotes
 
-Quotes that left me pondering.
+Quotes I found intriguing.
+
+```typst
+#quote(block: true, attribution: [Robert J. O'Neill \ October 24, 2026 ·  _How Osama Bin Laden Was Found, Killed, & Raid Strategy_])[
+"So if I'm worried about getting shot down, my worry's not going to stop a missile. So why are you worried?"
+]
+```
+This is incredibly practical, and it's something I preach (luckily, not with respect to missiles). Often, we spend our time and energy overthinking scenarios that are beyond our control, but it's an effort gone in vain. Really, the only thing we can control is our reaction and how to be better-prepared for next time.  
 
 ```typst
 #quote(block: true, attribution: [Nikole Hannah-Jones \ September 20, 2026 ·  _In Fighting for Every Black Child, Did I Betray My Own?_])[
