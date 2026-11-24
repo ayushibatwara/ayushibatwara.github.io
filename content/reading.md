@@ -3,9 +3,10 @@
 <span class="newthought">I love coffee & books.</span> I enjoy reading narrative nonfiction and historical fiction. I often add quotes from what I read [here](/writing/quotes/).  
 
 Currently reading:
-- *The Selfish Gene* by Richard Dawkins
-- *Superforecasting* by Dan Gardner & Philip E. Tetlock
-- *Superintelligence: Paths, Dangers, Strategies* by Nick Bostrom
+<!-- - *The Selfish Gene* by Richard Dawkins
+- *Superintelligence: Paths, Dangers, Strategies* by Nick Bostrom -->
+ - *Superforecasting* by Dan Gardner & Philip E. Tetlock
+* The Lion Women of Tehran by Marjan Kamali
 
 Some of my favorites:
 - *The Boys in the Boat* by Daniel James Brown^[This was a book recommended by Ali Ghodsi, CEO of Databricks.]
